@@ -21,6 +21,27 @@ Copy and then modify or extend it as needed to build a new game.
 Targets modern browsers, which means recent versions of Firefox and Chromium.
 
 
+## Build
+
+```sh
+npm run build
+# or
+node build.js
+```
+
+
+## Local development
+
+Start a local webserver, e.g.:
+
+```sh
+cd src
+python3 -m http.server
+```
+
+If you want to rename the "demo" directory to e.g. "mygame", you also have to adjust the path in "index.html".
+
+
 ## Resources
 
 * [ZzFX – Zuper Zmall Zound Zynth](https://github.com/KilledByAPixel/ZzFX)
