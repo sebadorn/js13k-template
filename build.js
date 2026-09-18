@@ -7,6 +7,7 @@ const { execFileSync } = require('node:child_process');
 
 
 const ect = join( process.env.HOME, 'programming', 'Efficient-Compression-Tool', 'build', 'ect' );
+const inFile = join( 'src', 'demo', 'entry.js' );
 const outFile = join( 'build', 'js13k-template.zip' );
 const maxSize = 13312;
 
@@ -44,7 +45,7 @@ async function build() {
 	process.stdout.write( '  Running esbuild to create bundle...' );
 	await esbuild.build( {
 		bundle: true,
-		entryPoints: [join( tmpDir, 'src', 'entry.js' )],
+		entryPoints: [join( tmpDir, inFile )],
 		minify: true,
 		outfile: bundleFile,
 		platform: 'browser',
