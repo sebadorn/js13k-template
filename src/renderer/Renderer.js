@@ -72,7 +72,7 @@ export class Renderer {
 			this.onUpdate?.( dt );
 			this.onDraw?.( this.ctx );
 
-			this.fpsCounter?.update( dt );
+			this.fpsCounter?.update( dt, this.scale );
 		}
 
 		this.last = timestamp;

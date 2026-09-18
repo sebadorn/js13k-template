@@ -57,8 +57,9 @@ export class FPSCounter {
 	/**
 	 *
 	 * @param {number} dt
+	 * @param {number} scale
 	 */
-	update( dt ) {
+	update( dt, scale ) {
 		this._time += dt;
 		this._history.push( this._targetFPS / dt );
 
@@ -70,7 +71,7 @@ export class FPSCounter {
 				this._history.splice( 0, overLimit );
 			}
 
-			this.node.textContent = `${this.average.toString().padStart( 3, '0' )} FPS`;
+			this.node.textContent = `${this.average.toString().padStart( 3, '0' )} FPS / ${scale}`;
 			this._time = 0;
 		}
 	}
