@@ -1,4 +1,3 @@
-import { targetFPS } from '../config.js';
 import { canvasCreate } from '../utils/canvas.js';
 
 
@@ -12,9 +11,9 @@ export class Renderer {
 	ctx;
 
 	/**
-	 * Elapsed game time in milliseconds.
+	 * Elapsed game time steps where 1 step = target frame time (defined by `targetFPS`).
 	 */
-	gameTime = 0;
+	timeSteps = 0;
 
 	/**
 	 * Offset to the window borders, assuming a centered canvas.
@@ -22,6 +21,11 @@ export class Renderer {
 	 */
 	offset = { x: 0, y: 0 };
 
+	/**
+	 * Scaling factor that is applied to fit the rendering area into the browser window.
+	 * Automatically updated in `resize()`.
+	 * @type {number}
+	 */
 	scale = 1;
 
 	_isPaused = false;
@@ -40,21 +44,30 @@ export class Renderer {
 
 
 	/**
+	 *
+	 */
+	clear() {
+		this.ctx.resetTransform();
+		this.ctx.clearRect( 0, 0, this.width, this.height );
+	}
+
+
+	/**
 	 * Start the main loop. Update logic, render to the canvas.
 	 * @param {number} [timestamp = 0]
 	 */
 	mainLoop( timestamp = 0 ) {
 		if( timestamp && this.last ) {
 			const timeElapsed = timestamp - this.last; // Time that passed between frames. [ms]
+			const dt = timeElapsed / this._targetFrameTime;
 
-			// Target speed of 60 FPS (=> 1000 / 60 ~= 16.667 [ms]).
-			const dt = timeElapsed / ( 1000 / targetFPS );
+			this.clear();
 
 			if( this._isPaused ) {
 				return; // Stop the loop.
 			}
 
-			this.gameTime += dt;
+			this.timeSteps += dt;
 
 			this.onUpdate?.( dt );
 			this.onDraw?.( this.ctx );
@@ -106,6 +119,9 @@ export class Renderer {
 			this.canvas.height = height;
 		}
 
+		this.width = width;
+		this.height = height;
+
 		this.offset.x = ( innerWidth - width ) * 0.5;
 		this.offset.y = ( innerHeight - height ) * 0.5;
 	}
@@ -118,6 +134,7 @@ export class Renderer {
 	 * @param {import('./FPSCounter').FPSCounter?} options.fpsCounter
 	 * @param {drawFunction} options.onDraw
 	 * @param {updateFunction} options.onUpdate
+	 * @param {number?} [options.targetFPS = 60]
 	 * @param {number?} options.targetRatio A target ratio to keep for the canvas size, e.g. `16 / 9`, `4 / 3` etc.
 	 *     Setting a ratio will change the originally set width and height to fit the window.
 	 * @returns {Renderer}
@@ -125,10 +142,15 @@ export class Renderer {
 	setup( domParent, options ) {
 		domParent.append( this.canvas );
 
-		this.fpsCounter = options.fpsCounter;
 		this.onDraw = options.onDraw;
 		this.onUpdate = options.onUpdate;
+		this.targetFPS = options.targetFPS || 60;
 		this.targetRatio = options.targetRatio > 0 ? options.targetRatio : 0;
+
+		this.fpsCounter = options.fpsCounter?.setTargetFPS( this.targetFPS );
+
+		// Target speed of 60 FPS (=> 1000 / 60 ~= 16.667 [ms]).
+		this._targetFrameTime = 1000 / this.targetFPS;
 
 		this.resize();
 		addEventListener( 'resize', _ev => this.resize() );

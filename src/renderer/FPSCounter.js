@@ -1,6 +1,3 @@
-import { targetFPS } from '../config.js';
-
-
 export class FPSCounter {
 
 
@@ -47,14 +44,26 @@ export class FPSCounter {
 
 	/**
 	 *
+	 * @param {number} targetFPS
+	 * @returns {FPSCounter}
+	 */
+	setTargetFPS( targetFPS ) {
+		this._targetFPS = targetFPS;
+
+		return this;
+	}
+
+
+	/**
+	 *
 	 * @param {number} dt
 	 */
 	update( dt ) {
 		this._time += dt;
-		this._history.push( targetFPS / dt );
+		this._history.push( this._targetFPS / dt );
 
 		// Update the text every second
-		if( this._time > targetFPS * 0.5 ) {
+		if( this._time > this._targetFPS * 0.5 ) {
 			const overLimit = this._history.length - FPSCounter.historyLimit;
 
 			if( overLimit > 0 ) {
