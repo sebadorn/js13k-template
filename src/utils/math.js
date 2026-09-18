@@ -11,9 +11,19 @@ export function clamp( value, min, max ) {
 
 
 /**
+ * Convert degrees to radians.
+ * @param {number} degrees
+ * @returns {number}
+ */
+export function degToRad( degrees ) {
+	return degrees * Math.PI / 180;
+};
+
+
+/**
  * Check if a position is inside an axis-aligned bounding box.
  * @param {Vector2D} pos The position.
- * @param {AABB} aabb The axis-aligned bounding box.
+ * @param {AABB2D} aabb The axis-aligned bounding box.
  * @returns {boolean} True if pos is inside, false otherwise.
  */
 export function isInside( pos, aabb ) {
@@ -43,6 +53,16 @@ export function lerp( a, b, progress ) {
  */
 export function numAsSignedStr( v ) {
 	return ( v < 0 ? '' : '+' ) + v;
+};
+
+
+/**
+ * Convert radians to degrees.
+ * @param {number} radians
+ * @returns {number}
+ */
+export function radToDeg( radians ) {
+	return radians * 180 / Math.PI;
 };
 
 

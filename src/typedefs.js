@@ -5,7 +5,14 @@
  */
 
 /**
- * @typedef {Object} AABB
+ * @typedef {Object} Vector3D
+ * @property {number} x
+ * @property {number} y
+ * @property {number} z
+ */
+
+/**
+ * @typedef {Object} AABB2D
  * @property {number} x
  * @property {number} y
  * @property {number} w
