@@ -21,6 +21,11 @@ Copy and then modify or extend it as needed to build a new game.
 Targets modern browsers, which means recent versions of Firefox and Chromium.
 
 
+## Resources
+
+* [ZzFX – Zuper Zmall Zound Zynth](https://github.com/KilledByAPixel/ZzFX)
+
+
 ---
 
 *Made without AI*
