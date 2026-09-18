@@ -29,41 +29,6 @@ export function canvasSnapshot( canvas ) {
 
 
 /**
- * Rotate around a given coordinate.
- * @param {CanvasRenderingContext2D} ctx
- * @param {Vector2D} coord
- * @param {number} rad - Rotation in radians.
- */
-export function contextRotate( ctx, coord, rad ) {
-	if( rad === 0 ) {
-		return;
-	}
-
-	ctx.translate( coord.x, coord.y );
-	ctx.rotate( rad );
-	ctx.translate( -coord.x, -coord.y );
-};
-
-
-/**
- * Scale around a given coordinate.
- * @param {CanvasRenderingContext2D} ctx
- * @param {Vector2D} coord
- * @param {number} sx
- * @param {number} sy
- */
-export function contextScale( ctx, coord, sx, sy ) {
-	if( sx === 1 && sy === 1 ) {
-		return;
-	}
-
-	ctx.translate( coord.x, coord.y );
-	ctx.scale( sx, sy );
-	ctx.translate( -coord.x, -coord.y );
-};
-
-
-/**
  * Get a copy of the given canvas trimmed down to its content.
  * Assumes a transparent background.
  * @param {HTMLCanvasElement} canvas
@@ -105,4 +70,69 @@ export function canvasTrim( canvas ) {
 	);
 
 	return [copyCnv, copyCtx];
+};
+
+
+/**
+ * Draw a circle.
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Vector2D} center
+ * @param {number} radius
+ */
+export function circle( ctx, center, radius ) {
+	ctx.beginPath();
+	ctx.arc( center.x, center.y, radius, 0, Math.PI * 2 );
+	ctx.closePath();
+};
+
+
+/**
+ * Rotate around a given coordinate.
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Vector2D} coord
+ * @param {number} rad - Rotation in radians.
+ */
+export function contextRotate( ctx, coord, rad ) {
+	if( rad === 0 ) {
+		return;
+	}
+
+	ctx.translate( coord.x, coord.y );
+	ctx.rotate( rad );
+	ctx.translate( -coord.x, -coord.y );
+};
+
+
+/**
+ * Scale around a given coordinate.
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {Vector2D} coord
+ * @param {number} sx
+ * @param {number} sy
+ */
+export function contextScale( ctx, coord, sx, sy ) {
+	if( sx === 1 && sy === 1 ) {
+		return;
+	}
+
+	ctx.translate( coord.x, coord.y );
+	ctx.scale( sx, sy );
+	ctx.translate( -coord.x, -coord.y );
+};
+
+
+/**
+ * Load an area from an image onto a new canvas.
+ * @param {HTMLImageElement} img
+ * @param {number} x
+ * @param {number} y
+ * @param {number} w
+ * @param {number} h
+ * @returns {[HTMLCanvasElement, CanvasRenderingContext2D]}
+ */
+export function fromImageToCanvas( img, x, y, w, h ) {
+	const [canvas, ctx] = canvasCreate( w, h );
+	ctx.drawImage( img, x, y, w, h, 0, 0, w, h );
+
+	return [canvas, ctx];
 };
