@@ -1,6 +1,7 @@
-import { Level } from './Level.js';
-import { FPSCounter } from './renderer/FPSCounter.js';
-import { Renderer } from './renderer/Renderer.js';
+import { FPSCounter } from '../renderer/FPSCounter.js';
+import { Renderer } from '../renderer/Renderer.js';
+import { KeyboardInput } from '../input/Keyboard.js';
+import { LevelIndex } from './levels/LevelIndex.js';
 
 
 export class MyGame {
@@ -10,10 +11,16 @@ export class MyGame {
 	 *
 	 */
 	constructor() {
+		KeyboardInput.setup();
+		KeyboardInput.onKeyUp( 'Escape', _ev => {
+			this.renderer.togglePause();
+		} );
+
 		this.renderer = new Renderer( 1920, 1080 );
 		this.renderer.setup(
 			document.body,
 			{
+				targetFPS: 60,
 				targetRatio: 16 / 9,
 				fpsCounter: new FPSCounter(),
 				onUpdate: dt => this.update( dt ),
@@ -21,7 +28,7 @@ export class MyGame {
 			}
 		).mainLoop();
 
-		this.level = new Level();
+		this.level = new LevelIndex( this.renderer );
 	}
 
 
