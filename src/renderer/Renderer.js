@@ -87,16 +87,16 @@ export class Renderer {
 			// Fill available window while keeping target ratio.
 			this.targetRatio ||
 			// Only adjust to window if it becomes too small.
-			height > window.innerHeight ||
-			width > window.innerWidth
+			height > innerHeight ||
+			width > innerWidth
 		) {
 			const ratio = this.targetRatio || ( this.originalWidth / this.originalHeight );
 
-			height = window.innerHeight;
+			height = innerHeight;
 			width = Math.round( height * ratio );
 
-			if( width > window.innerWidth ) {
-				width = window.innerWidth;
+			if( width > innerWidth ) {
+				width = innerWidth;
 				height = width / ratio;
 			}
 
@@ -106,8 +106,8 @@ export class Renderer {
 			this.canvas.height = height;
 		}
 
-		this.offset.x = ( window.innerWidth - width ) * 0.5;
-		this.offset.y = ( window.innerHeight - height ) * 0.5;
+		this.offset.x = ( innerWidth - width ) * 0.5;
+		this.offset.y = ( innerHeight - height ) * 0.5;
 	}
 
 
@@ -131,7 +131,7 @@ export class Renderer {
 		this.targetRatio = options.targetRatio > 0 ? options.targetRatio : 0;
 
 		this.resize();
-		window.addEventListener( 'resize', _ev => this.resize() );
+		addEventListener( 'resize', _ev => this.resize() );
 
 		return this;
 	}

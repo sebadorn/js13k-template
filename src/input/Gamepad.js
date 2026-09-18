@@ -178,14 +178,14 @@ export const GamepadInput = {
 	 *
 	 */
 	setup() {
-		window.addEventListener( 'gamepadconnected', ev => {
+		addEventListener( 'gamepadconnected', ev => {
 			this.numGamepads++;
 			this.gamepads[ev.gamepad.index] = ev.gamepad;
 
 			this._on['gp_connect'].forEach( cb => cb() );
 		} );
 
-		window.addEventListener( 'gamepaddisconnected', ev => {
+		addEventListener( 'gamepaddisconnected', ev => {
 			this.numGamepads--;
 			delete this.gamepads[ev.gamepad.index];
 
