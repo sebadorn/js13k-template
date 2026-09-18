@@ -1,4 +1,4 @@
-import { canvasCreate } from '../utils/canvas.js';
+import { canvasCreate, canvasSetSize } from '../utils/canvas.js';
 
 
 export class Renderer {
@@ -47,7 +47,7 @@ export class Renderer {
 	 *
 	 */
 	clear() {
-		this.ctx.resetTransform();
+		this.ctx.setTransform( this.scale, 0, 0, this.scale, 0, 0 );
 		this.ctx.clearRect( 0, 0, this.width, this.height );
 	}
 
@@ -113,14 +113,13 @@ export class Renderer {
 				height = width / ratio;
 			}
 
-			this.scale = height / this.originalHeight;
+			this.scale = height / this.originalHeight * devicePixelRatio;
 
-			this.canvas.width = width;
-			this.canvas.height = height;
+			canvasSetSize( this.canvas, width, height );
 		}
 
-		this.width = width;
-		this.height = height;
+		this.width = width / this.scale * devicePixelRatio;
+		this.height = height / this.scale * devicePixelRatio;
 
 		this.offset.x = ( innerWidth - width ) * 0.5;
 		this.offset.y = ( innerHeight - height ) * 0.5;

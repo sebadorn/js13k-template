@@ -6,12 +6,25 @@
  */
 export function canvasCreate( w, h ) {
 	const canvas = document.createElement( 'canvas' );
-	canvas.width = w;
-	canvas.height = h;
+	canvasSetSize( canvas, w, h );
 
 	const ctx = canvas.getContext( '2d', { alpha: true } );
 
 	return [canvas, ctx];
+};
+
+
+/**
+ *
+ * @param {HTMLCanvasElement} canvas
+ * @param {number} w
+ * @param {number} h
+ */
+export function canvasSetSize( canvas, w, h ) {
+	canvas.style.width = `${w}px`;
+	canvas.style.height = `${h}px`;
+	canvas.width = Math.floor( w * devicePixelRatio );
+	canvas.height = Math.floor( h * devicePixelRatio );
 };
 
 
