@@ -11,7 +11,7 @@ export const KeyboardInput = {
 	 * Initialize the input handler.
 	 */
 	setup() {
-		document.body.onkeydown = ev => {
+		document.body.addEventListener( 'keydown', ev => {
 			if( ev.altKey || ev.ctrlKey || ev.metaKey ) {
 				return;
 			}
@@ -25,12 +25,12 @@ export const KeyboardInput = {
 
 				if( this._onKeyDown[ev.code] ) {
 					ev.preventDefault();
-					this._onKeyDown[ev.code].forEach( cb => cb() );
+					this._onKeyDown[ev.code].forEach( cb => cb( ev ) );
 				}
 			}
-		};
+		} );
 
-		document.body.onkeyup = ev => {
+		document.body.addEventListener( 'keyup', ev => {
 			if( ev.altKey || ev.ctrlKey || ev.metaKey ) {
 				return;
 			}
@@ -41,9 +41,9 @@ export const KeyboardInput = {
 
 			if( this._onKeyUp[ev.code] ) {
 				ev.preventDefault();
-				this._onKeyUp[ev.code].forEach( cb => cb() );
+				this._onKeyUp[ev.code].forEach( cb => cb( ev ) );
 			}
-		};
+		} );
 	},
 
 
