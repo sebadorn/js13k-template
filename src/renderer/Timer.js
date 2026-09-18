@@ -1,6 +1,3 @@
-import { targetFPS } from './config.js';
-
-
 /**
  * Timer class to time e.g. animations.
  */
@@ -9,7 +6,7 @@ export class Timer {
 
 	/**
 	 *
-	 * @param {import('./Level').Level} level Level to which this timer sets its time to.
+	 * @param {import('./Level.js').Level} level Level to which this timer sets its time to.
 	 * @param {number} [duration = 0] Duration in game seconds.
 	 */
 	constructor( level, duration = 0 ) {
@@ -23,7 +20,7 @@ export class Timer {
 	 * @returns {boolean}
 	 */
 	elapsed() {
-		return this.level.time > this.timeEnd;
+		return this.level.timeSteps > this.timeEnd;
 	}
 
 
@@ -32,7 +29,7 @@ export class Timer {
 	 * @returns {number} The remaining time in seconds.
 	 */
 	left() {
-		return this.timeEnd - this.level.time;
+		return this.timeEnd - this.level.timeSteps;
 	}
 
 
@@ -49,7 +46,7 @@ export class Timer {
 	 * Restart the timer with the last set duration.
 	 */
 	restart() {
-		this.set( this.duration / targetFPS );
+		this.set( this.duration / this.level.renderer.targetFPS );
 	}
 
 
@@ -58,8 +55,8 @@ export class Timer {
 	 * @param {number} duration Duration in game seconds.
 	 */
 	set( duration ) {
-		this.duration = duration * targetFPS;
-		this.timeEnd = this.level.time + this.duration;
+		this.duration = duration * this.level.renderer.targetFPS;
+		this.timeEnd = this.level.timeSteps + this.duration;
 	}
 
 
