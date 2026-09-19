@@ -1,3 +1,6 @@
+import { isNumber } from '../utils/compare.js';
+
+
 /**
  * Text-to-Speech (TTS) using locally available voices.
  * Huge drawback: It is not that unlikely that there are no local voices installed.
@@ -21,11 +24,13 @@ export const TextToSpeech = {
 	/**
 	 *
 	 * @param {string} text
+	 * @param {number} [volume = 0.5]
 	 */
-	speak( text ) {
+	speak( text, volume ) {
 		if( this.voice ) {
 			const utterance = new SpeechSynthesisUtterance( text );
 			utterance.voice = this.voice;
+			utterance.volume = isNumber( volume ) ? volume : 0.5;
 
 			speechSynthesis.speak( utterance );
 		}
