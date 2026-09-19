@@ -91,14 +91,15 @@ export function canvasTrim( canvas ) {
 
 
 /**
- * Draw a circle.
+ * Draw a circle with x/y being the top left position.
  * @param {CanvasRenderingContext2D} ctx
- * @param {Vector2D} center
+ * @param {number} x X coordinate of the top-left corner.
+ * @param {number} y Y coordinate of the top-left corner.
  * @param {number} radius
  */
-export function circle( ctx, center, radius ) {
+export function circle( ctx, x, y, radius ) {
 	ctx.beginPath();
-	ctx.arc( center.x, center.y, radius, 0, Math.PI * 2 );
+	ctx.arc( x + radius, y + radius, radius, 0, Math.PI * 2 );
 	ctx.closePath();
 };
 
