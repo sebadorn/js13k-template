@@ -1,5 +1,6 @@
 # Directories
 /build
+/ignore
 node_modules
 
 # Files
