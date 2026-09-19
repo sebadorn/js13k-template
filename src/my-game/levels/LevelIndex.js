@@ -24,7 +24,7 @@ export class LevelIndex extends Level {
 		ctx.fillText( 'Hello, World!', this.renderer.width / 2, this.renderer.height / 2 );
 
 		ctx.fillStyle = '#f00';
-		ctx.fillRect( this.renderer.width / 2 - 100, this.renderer.height / 2 + 50, 200, 200 );
+		ctx.fillRect( 100, 100, 200, 200 );
 	}
 
 

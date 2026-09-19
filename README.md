@@ -39,8 +39,6 @@ cd src
 python3 -m http.server
 ```
 
-If you want to rename the "demo" directory to e.g. "mygame", you also have to adjust the path in "index.html".
-
 
 ## Resources
 

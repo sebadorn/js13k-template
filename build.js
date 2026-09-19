@@ -7,7 +7,7 @@ const { execFileSync } = require('node:child_process');
 
 
 const ect = join( process.env.HOME, 'programming', 'Efficient-Compression-Tool', 'build', 'ect' );
-const inFile = join( 'src', 'demo', 'entry.js' );
+const inFile = join( 'src', 'my-game', 'entry.js' );
 const outFile = join( 'build', 'js13k-template.zip' );
 const maxSize = 13312;
 
@@ -25,8 +25,7 @@ const tmpDir = join( 'build', 'tmp' );
 mkdirSync( tmpDir, { recursive: true } );
 cpSync( 'src', join( tmpDir, 'src' ), { recursive: true } );
 console.log( '  Copied all source files' );
-cpSync( 'assets', join( tmpDir, 'assets' ), { recursive: true } );
-console.log( '  Copied all assets' );
+// TODO: asset handling, e.g. image files
 
 
 // Minify index.html and replace name of entry script.
