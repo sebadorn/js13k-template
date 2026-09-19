@@ -1,3 +1,6 @@
+import { pixelMode } from '../config.js';
+
+
 /**
  * Get a new canvas and its 2D context.
  * @param {number} w Width for the new canvas.
@@ -9,6 +12,7 @@ export function canvasCreate( w, h ) {
 	canvasSetSize( canvas, w, h );
 
 	const ctx = canvas.getContext( '2d', { alpha: true } );
+	ctx.imageSmoothingEnabled = !pixelMode;
 
 	return [canvas, ctx];
 };
@@ -30,11 +34,11 @@ export function canvasSetSize( canvas, w, h ) {
 
 /**
  * Create a snapshot of a given canvas by painting it on a new one of the same size.
- * @param {HTMLCanvasElement} canvas
- * @returns {[HTMLCanvasElement, CanvasRenderingContext2D]}
+ * @param {HTMLCanvasElement|OffscreenCanvas} canvas
+ * @returns {[OffscreenCanvas, CanvasRenderingContext2D]}
  */
 export function canvasSnapshot( canvas ) {
-	const [canvasSnapshot, ctxSnapshot] = canvasCreate( canvas.width, canvas.height );
+	const [canvasSnapshot, ctxSnapshot] = offscreenCreate( canvas.width, canvas.height );
 	ctxSnapshot.drawImage( canvas, 0, 0, canvas.width, canvas.height );
 
 	return [canvasSnapshot, ctxSnapshot];
@@ -44,8 +48,8 @@ export function canvasSnapshot( canvas ) {
 /**
  * Get a copy of the given canvas trimmed down to its content.
  * Assumes a transparent background.
- * @param {HTMLCanvasElement} canvas
- * @returns {[HTMLCanvasElement, CanvasRenderingContext2D]}
+ * @param {HTMLCanvasElement|OffscreenCanvas} canvas
+ * @returns {[OffscreenCanvas, CanvasRenderingContext2D]}
  */
 export function canvasTrim( canvas ) {
 	let left = canvas.width;
@@ -75,7 +79,7 @@ export function canvasTrim( canvas ) {
 	const newWidth = right - left;
 	const newHeight = bottom - top;
 
-	const [copyCnv, copyCtx] = canvasCreate( newWidth, newHeight );
+	const [copyCnv, copyCtx] = offscreenCreate( newWidth, newHeight );
 	copyCtx.drawImage(
 		canvas,
 		left, top, newWidth, newHeight,
@@ -141,11 +145,27 @@ export function contextScale( ctx, coord, sx, sy ) {
  * @param {number} y
  * @param {number} w
  * @param {number} h
- * @returns {[HTMLCanvasElement, CanvasRenderingContext2D]}
+ * @returns {[OffscreenCanvas, CanvasRenderingContext2D]}
  */
 export function fromImageToCanvas( img, x, y, w, h ) {
-	const [canvas, ctx] = canvasCreate( w, h );
+	const [canvas, ctx] = offscreenCreate( w, h );
 	ctx.drawImage( img, x, y, w, h, 0, 0, w, h );
+
+	return [canvas, ctx];
+};
+
+
+/**
+ * Get a new OffscreenCanvas and its 2D context.
+ * @param {number} w Width for the new canvas.
+ * @param {number} h Height for the new canvas.
+ * @returns {[OffscreenCanvas, CanvasRenderingContext2D]}
+ */
+export function offscreenCreate( w, h ) {
+	const canvas = new OffscreenCanvas( w, h );
+
+	const ctx = canvas.getContext( '2d', { alpha: true } );
+	ctx.imageSmoothingEnabled = !pixelMode;
 
 	return [canvas, ctx];
 };

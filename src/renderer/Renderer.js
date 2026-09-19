@@ -1,3 +1,4 @@
+import { pixelMode } from '../config.js';
 import { canvasCreate, canvasSetSize } from '../utils/canvas.js';
 
 
@@ -49,6 +50,7 @@ export class Renderer {
 	clear() {
 		this.ctx.setTransform( this.scale, 0, 0, this.scale, 0, 0 );
 		this.ctx.clearRect( 0, 0, this.width, this.height );
+		this.ctx.imageSmoothingEnabled = !pixelMode;
 	}
 
 
