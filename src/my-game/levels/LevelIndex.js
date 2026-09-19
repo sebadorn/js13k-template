@@ -1,4 +1,5 @@
 import { Level } from '../../renderer/Level.js';
+import { circle } from '../../utils/canvas.js';
 
 
 export class LevelIndex extends Level {
@@ -24,7 +25,15 @@ export class LevelIndex extends Level {
 		ctx.fillText( 'Hello, World!', this.renderer.width / 2, this.renderer.height / 2 );
 
 		ctx.fillStyle = '#f00';
-		ctx.fillRect( 100, 100, 200, 200 );
+		circle( ctx, 100, 100, 100 );
+		ctx.fill();
+
+		ctx.strokeStyle = '#fa09';
+		ctx.lineWidth = 10;
+		ctx.beginPath();
+		ctx.moveTo( 100, 300 );
+		ctx.lineTo( 300, 600 );
+		ctx.stroke();
 	}
 
 
