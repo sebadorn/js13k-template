@@ -65,14 +65,18 @@ export class Renderer {
 
 			this.clear();
 
-			if( this._isPaused ) {
-				return; // Stop the loop.
-			}
-
 			this.timeSteps += dt;
 
-			this.onUpdate?.( dt );
-			this.onDraw?.( this.ctx );
+			if( this._isPaused ) {
+				if( this.pauseHandler ) {
+					this.pauseHandler.update( dt );
+					this.pauseHandler.draw( this.ctx );
+				}
+			}
+			else {
+				this.onUpdate?.( dt );
+				this.onDraw?.( this.ctx );
+			}
 
 			this.fpsCounter?.update( dt, this.scale );
 		}
@@ -135,6 +139,7 @@ export class Renderer {
 	 * @param {import('./FPSCounter').FPSCounter?} options.fpsCounter
 	 * @param {drawFunction} options.onDraw
 	 * @param {updateFunction} options.onUpdate
+	 * @param {PauseHandler?} options.pauseHandler
 	 * @param {number?} [options.targetFPS = 60]
 	 * @param {number?} options.targetRatio A target ratio to keep for the canvas size, e.g. `16 / 9`, `4 / 3` etc.
 	 *     Setting a ratio will change the originally set width and height to fit the window.
@@ -145,6 +150,7 @@ export class Renderer {
 
 		this.onDraw = options.onDraw;
 		this.onUpdate = options.onUpdate;
+		this.pauseHandler = options.pauseHandler;
 		this.targetFPS = options.targetFPS || 60;
 		this.targetRatio = options.targetRatio > 0 ? options.targetRatio : 0;
 
@@ -190,4 +196,10 @@ export class Renderer {
 /**
  * @callback updateFunction
  * @param {number} dt
+ */
+
+/**
+ * @typedef {Object} PauseHandler
+ * @property {drawFunction} draw
+ * @property {updateFunction} update
  */
