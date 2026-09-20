@@ -9,6 +9,7 @@ export default [
 		ignores: [
 			'build/',
 			'node_modules/',
+			'src/audio/ZzFX.js',
 		],
 	},
 	{
