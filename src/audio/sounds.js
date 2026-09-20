@@ -1,5 +1,50 @@
-import { zzfx } from 'zzfx';
 import { isNumber } from '../utils/compare.js';
+import { zzfx } from './ZzFX.js';
+
+
+export const audioContext = new AudioContext();
+
+
+/**
+ *
+ * @see https://noisehack.com/generate-noise-web-audio-api/
+ * @param {object} options
+ * @param {boolean} [options.autoStart = true]
+ * @param {number} [options.duration = 2] Duration of the white noise sample in seconds.
+ * @param {boolean} [options.loop = false]
+ * @param {number} [options.volume = 0.1] Audio volume with a value [0, 1].
+ * @returns {AudioBufferSourceNode}
+ */
+export function generateWhiteNoise( {
+	autoStart = true,
+	duration = 2,
+	loop = false,
+	volume = 0.1,
+} = {} ) {
+	const bufferSize = duration * audioContext.sampleRate;
+	const noiseBuffer = audioContext.createBuffer( 1, bufferSize, audioContext.sampleRate );
+	const channelData = noiseBuffer.getChannelData( 0 );
+
+	for( let i = 0; i < bufferSize; i++ ) {
+		channelData[i] = Math.random() * 2 - 1;
+	}
+
+	const whiteNoise = audioContext.createBufferSource();
+	whiteNoise.buffer = noiseBuffer;
+	whiteNoise.loop = loop;
+
+	if( autoStart ) {
+		whiteNoise.start();
+	}
+
+	const gainNode = audioContext.createGain();
+	gainNode.gain.setValueAtTime( volume, audioContext.currentTime );
+
+	whiteNoise.connect( gainNode );
+	gainNode.connect( audioContext.destination );
+
+	return whiteNoise;
+};
 
 
 /**
