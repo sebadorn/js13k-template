@@ -16,10 +16,10 @@ export function vec2dot( a, b ) {
  * @returns {number} Euclidean distance between a and b.
  */
 export function vec2euclidDistance( a, b ) {
-	const diffX = b.x - a.x;
-	const diffY = b.y - a.y;
-
-	return Math.sqrt( diffX * diffX + diffY * diffY );
+	return vec2len( {
+		x: b.x - a.x,
+		y: b.y - a.y,
+	} );
 };
 
 
@@ -66,11 +66,11 @@ export function vec3dot( a, b ) {
  * @returns {number} Euclidean distance between a and b.
  */
 export function vec3euclidDistance( a, b ) {
-	const diffX = b.x - a.x;
-	const diffY = b.y - a.y;
-	const diffZ = b.z - a.z;
-
-	return Math.sqrt( diffX * diffX + diffY * diffY + diffZ * diffZ );
+	return vec3len( {
+		x: b.x - a.x,
+		y: b.y - a.y,
+		z: b.z - a.z,
+	} );
 };
 
 
