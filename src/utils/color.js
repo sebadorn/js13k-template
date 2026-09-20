@@ -23,14 +23,15 @@ export function hexToColor( c ) {
 		c = c.slice( 1 );
 	}
 
-	const len = c.length === 3 ? 1 : 2;
+	const len = c.length < 5 ? 1 : 2;
 	const hasAlpha = c.length === 4 || c.length === 8;
+	let pos = 0;
 
 	return {
-		r: parseInt( c.substring( 0, len ), 16 ) / 255,
-		g: parseInt( c.substring( len, len ), 16 ) / 255,
-		b: parseInt( c.substring( len + len, len ), 16 ) / 255,
-		a: hasAlpha ? parseInt( c.substring( len + len + len, len ), 16 ) / 255 : 1,
+		r: Math.round( parseInt( c.substring( pos, pos += len ), 16 ) / 2.55 ) / 100,
+		g: Math.round( parseInt( c.substring( pos, pos += len ), 16 ) / 2.55 ) / 100,
+		b: Math.round( parseInt( c.substring( pos, pos += len ), 16 ) / 2.55 ) / 100,
+		a: hasAlpha ? Math.round( parseInt( c.substring( pos, pos + len ), 16 ) / 2.55 ) / 100 : 1,
 	};
 };
 
