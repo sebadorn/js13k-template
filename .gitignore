@@ -1,7 +1,8 @@
 # Directories
-/build
-/ignore
-node_modules
+.vitest/
+/build/
+/ignore/
+node_modules/
 
 # Files
 .DS_Store
