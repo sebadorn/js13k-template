@@ -64,17 +64,3 @@ export function numAsSignedStr( v ) {
 export function radToDeg( radians ) {
 	return radians * 180 / Math.PI;
 };
-
-
-/**
- * Return a random (rounded) number from the interval [start, end].
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#getting_a_random_integer_between_two_values_inclusive
- * @param {number} start An integer as minimum value.
- * @param {number} end An integer as maximum value.
- * @returns {number}
- */
-export function randInt( start, end ) {
-	const diff = end - start + 1;
-
-	return Math.floor( Math.random() * diff + start );
-};
