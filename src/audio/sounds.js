@@ -15,7 +15,13 @@ function generateNoise( noiseBuffer, autoStart, duration, loop, volume ) {
 	}
 
 	const gainNode = audioContext.createGain();
-	gainNode.gain.setValueAtTime( volume, audioContext.currentTime );
+	gainNode.gain.setValueAtTime( 0, audioContext.currentTime );
+	gainNode.gain.linearRampToValueAtTime( volume, audioContext.currentTime + 0.3 );
+
+	if( duration > 0 ) {
+		gainNode.gain.setValueAtTime( volume, audioContext.currentTime + duration - 0.3 );
+		gainNode.gain.linearRampToValueAtTime( 0, audioContext.currentTime + duration );
+	}
 
 	noise.connect( gainNode );
 	gainNode.connect( audioContext.destination );
