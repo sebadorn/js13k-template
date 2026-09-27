@@ -1,3 +1,7 @@
+/**
+ * The FPSCounter class is supposed to help while developing and not to be a part of the final game.
+ * Therefore the UI is not configurable and size is of no concern.
+ */
 export class FPSCounter {
 
 
