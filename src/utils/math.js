@@ -2,6 +2,21 @@ import { vec2sub } from './vector.js';
 
 
 /**
+ * Get the bounds of a circle as rectangle.
+ * @param {Circle} c
+ * @returns {Rectangle}
+ */
+export function circleBounds( c ) {
+	return {
+		x: c.x - c.r,
+		y: c.y - c.r,
+		w: c.r + c.r,
+		h: c.r + c.r,
+	};
+};
+
+
+/**
  * Check if two circles overlap.
  * @param  {Circle} c1
  * @param  {Circle} c2
@@ -103,17 +118,43 @@ export function radToDeg( radians ) {
 
 
 /**
+ * Get the center of a rectangle.
+ * @param {Rectangle} r
+ * @returns {Vector2D}
+ */
+export function rectCenter( r ) {
+	return {
+		x: r.x + r.w * 0.5,
+		y: r.y + r.h * 0.5,
+	};
+};
+
+
+/**
  * Check if two axis-aligned bounding boxes overlap.
- * @param  {Rectangle} a
- * @param  {Rectangle} b
+ * @param {Rectangle} a
+ * @param {Rectangle} b
  * @return {boolean}
  */
 export function rectOverlap( a, b ) {
+	const [overlapX, overlapY] = rectOverlapSize( a, b );
+
+	return overlapX * overlapY > Number.EPSILON;
+};
+
+
+/**
+ * Calculate the overlapping areas on the x and y axes.
+ * @param {Rectangle} a
+ * @param {Rectangle} b
+ * @return {[number, number]}
+ */
+export function rectOverlapSize( a, b ) {
 	let overlapX = Math.min( a.x + a.w, b.x + b.w ) - Math.max( a.x, b.x );
 	overlapX = ( overlapX < 0 ) ? 0 : overlapX;
 
 	let overlapY = Math.min( a.y + a.h, b.y + b.h ) - Math.max( a.y, b.y );
 	overlapY = ( overlapY < 0 ) ? 0 : overlapY;
 
-	return ( overlapX * overlapY > Number.EPSILON );
+	return [overlapX, overlapY];
 };
