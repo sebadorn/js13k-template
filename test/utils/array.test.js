@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { removeItem, removeWhere } from '../../src/utils/array';
+import { removeItem, removeWhere, shuffle } from '../../src/utils/array';
 
 
 test( 'removeItem', () => {
@@ -17,4 +17,14 @@ test( 'removeWhere', () => {
 	removeWhere( list, item => item.a < 0 );
 	expect( list.length ).toBe( 4 );
 	list.forEach( item => expect( item ).toSatisfy( v => v.a >= 0 ) );
+} );
+
+
+test( 'shuffle', () => {
+	const list = [1, 2, 3, 4, 5, 6];
+	const copy = list.slice();
+
+	shuffle( list );
+	expect( list.length ).toBe( 6 );
+	expect( list ).not.toEqual( copy );
 } );

@@ -1,5 +1,10 @@
 import { expect, test } from 'vitest';
-import { vec2dot, vec2euclidDistance, vec2len, vec2normalize, vec3dot, vec3euclidDistance, vec3len, vec3normalize } from '../../src/utils/vector';
+import { vec2add, vec2dot, vec2euclidDistance, vec2len, vec2mul, vec2normalize, vec2sub, vec3add, vec3dot, vec3euclidDistance, vec3len, vec3mul, vec3normalize, vec3sub } from '../../src/utils/vector';
+
+
+test( 'vec2add', () => {
+	expect( vec2add( { x: -1, y: 3 }, { x: 1, y: 4 } ) ).toEqual( { x: 0, y: 7 } );
+} );
 
 
 test( 'vec2dot', () => {
@@ -18,8 +23,23 @@ test( 'vec2len', () => {
 } );
 
 
+test( 'vec2mul', () => {
+	expect( vec2mul( { x: -1, y: 2 }, 3 ) ).toEqual( { x: -3, y: 6 } );
+} );
+
+
 test( 'vec2normalize', () => {
 	expect( vec2len( vec2normalize( { x: 13, y: -24 } ) ) ).toBeCloseTo( 1, 5 );
+} );
+
+
+test( 'vec2sub', () => {
+	expect( vec2sub( { x: -1, y: 3 }, { x: 1, y: 4 } ) ).toEqual( { x: -2, y: -1 } );
+} );
+
+
+test( 'vec3add', () => {
+	expect( vec3add( { x: -1, y: 3, z: 0 }, { x: 1, y: 4, z: -2 } ) ).toEqual( { x: 0, y: 7, z: -2 } );
 } );
 
 
@@ -39,6 +59,16 @@ test( 'vec3len', () => {
 } );
 
 
+test( 'vec3mul', () => {
+	expect( vec3mul( { x: -1, y: 2, z: 3 }, -2 ) ).toEqual( { x: 2, y: -4, z: -6 } );
+} );
+
+
 test( 'vec3normalize', () => {
 	expect( vec3len( vec3normalize( { x: 13, y: -24, z: 4.1 } ) ) ).toBeCloseTo( 1, 5 );
+} );
+
+
+test( 'vec3sub', () => {
+	expect( vec3sub( { x: -1, y: 3, z: 0 }, { x: 1, y: 4, z: -2 } ) ).toEqual( { x: -2, y: -1, z: 2 } );
 } );
