@@ -36,6 +36,21 @@ export function removeWhere( arr, check ) {
 
 
 /**
+ * Shuffle an array in place.
+ * @param  {any[]} arr
+ * @return {any[]}
+ */
+export function shuffle( arr ) {
+	for( let i = arr.length - 1; i > 0; i-- ) {
+		const j = Math.floor( Math.random() * ( i + 1 ) );
+		[arr[i], arr[j]] = [arr[j], arr[i]];
+	}
+
+	return arr;
+};
+
+
+/**
  * @callback arrayItemCheck
  * @param {any} item An item of the array to check if it should be removed.
  * @param {number} i Index of the item in the array.
