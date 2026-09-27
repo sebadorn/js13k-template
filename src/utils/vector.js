@@ -45,6 +45,20 @@ export function vec2len( v ) {
 
 
 /**
+ * Multiple a vector with a number and return the result as a new one.
+ * @param {Vector2D} v
+ * @param {number} m
+ * @returns {Vector2D}
+ */
+export function vec2mul( v, m ) {
+	return {
+		x: v.x * m,
+		y: v.y * m,
+	};
+};
+
+
+/**
  * Normalizes a 2D vector. Does not modify the input vector.
  * @param {Vector2D} v The vector to normalize.
  * @returns {Vector2D} The normalized vector.
@@ -117,6 +131,21 @@ export function vec3euclidDistance( a, b ) {
  */
 export function vec3len( v ) {
 	return Math.sqrt( v.x * v.x + v.y * v.y + v.z * v.z );
+};
+
+
+/**
+ * Multiple a vector with a number and return the result as a new one.
+ * @param {Vector3D} v
+ * @param {number} m
+ * @returns {Vector3D}
+ */
+export function vec3mul( v, m ) {
+	return {
+		x: v.x * m,
+		y: v.y * m,
+		z: v.z * m,
+	};
 };
 
 
