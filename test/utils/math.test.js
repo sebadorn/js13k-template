@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { clamp, degToRad, isInside, lerp, numAsSignedStr, radToDeg } from '../../src/utils/math';
+import { clamp, degToRad, isInsideRect, lerp, numAsSignedStr, radToDeg } from '../../src/utils/math';
 
 
 test( 'clamp', () => {
@@ -15,16 +15,16 @@ test( 'degToRad/radToDeg', () => {
 } );
 
 
-test( 'isInside', () => {
+test( 'isInsideRect', () => {
 	const box = {
 		x: 10, y: 20,
 		w: 30, h: 40
 	};
 
-	expect( isInside( { x: 10, y: 20 }, box ) ).toBe( true );
-	expect( isInside( { x: 40, y: 60 }, box ) ).toBe( true );
-	expect( isInside( { x: 40.001, y: 30 }, box ) ).toBe( false );
-	expect( isInside( { x: 25, y: 19.999 }, box ) ).toBe( false );
+	expect( isInsideRect( { x: 10, y: 20 }, box ) ).toBe( true );
+	expect( isInsideRect( { x: 40, y: 60 }, box ) ).toBe( true );
+	expect( isInsideRect( { x: 40.001, y: 30 }, box ) ).toBe( false );
+	expect( isInsideRect( { x: 25, y: 19.999 }, box ) ).toBe( false );
 } );
 
 

@@ -1,4 +1,18 @@
 /**
+ * Add two vectors and return the result as a new one.
+ * @param {Vector2D} a
+ * @param {Vector2D} b
+ * @returns {Vector2D}
+ */
+export function vec2add( a, b ) {
+	return {
+		x: a.x + b.x,
+		y: a.y + b.y,
+	};
+};
+
+
+/**
  * Dot product of two 2D vectors.
  * @param {Vector2D} a
  * @param {Vector2D} b
@@ -16,10 +30,7 @@ export function vec2dot( a, b ) {
  * @returns {number} Euclidean distance between a and b.
  */
 export function vec2euclidDistance( a, b ) {
-	return vec2len( {
-		x: b.x - a.x,
-		y: b.y - a.y,
-	} );
+	return vec2len( vec2sub( b, a ) );
 };
 
 
@@ -39,11 +50,40 @@ export function vec2len( v ) {
  * @returns {Vector2D} The normalized vector.
  */
 export function vec2normalize( v ) {
-	const length = vec2len( v );
+	const length = vec2len( v ) || 1;
 
 	return {
 		x: v.x / length,
 		y: v.y / length,
+	};
+};
+
+
+/**
+ * Subtract vector b from a and return the result as a new one.
+ * @param {Vector2D} a
+ * @param {Vector2D} b
+ * @returns {Vector2D}
+ */
+export function vec2sub( a, b ) {
+	return {
+		x: a.x - b.x,
+		y: a.y - b.y,
+	};
+};
+
+
+/**
+ * Add two vectors and return the result as a new one.
+ * @param {Vector3D} a
+ * @param {Vector3D} b
+ * @returns {Vector3D}
+ */
+export function vec3add( a, b ) {
+	return {
+		x: a.x + b.x,
+		y: a.y + b.y,
+		z: a.z + b.z,
 	};
 };
 
@@ -66,11 +106,7 @@ export function vec3dot( a, b ) {
  * @returns {number} Euclidean distance between a and b.
  */
 export function vec3euclidDistance( a, b ) {
-	return vec3len( {
-		x: b.x - a.x,
-		y: b.y - a.y,
-		z: b.z - a.z,
-	} );
+	return vec3len( vec3sub( b, a ) );
 };
 
 
@@ -90,11 +126,26 @@ export function vec3len( v ) {
  * @returns {Vector3D} The normalized vector.
  */
 export function vec3normalize( v ) {
-	const length = vec3len( v );
+	const length = vec3len( v ) || 1;
 
 	return {
 		x: v.x / length,
 		y: v.y / length,
 		z: v.z / length,
+	};
+};
+
+
+/**
+ * Subtract vector b from a and return the result as a new one.
+ * @param {Vector3D} a
+ * @param {Vector3D} b
+ * @returns {Vector3D}
+ */
+export function vec3sub( a, b ) {
+	return {
+		x: a.x - b.x,
+		y: a.y - b.y,
+		z: a.z - b.z,
 	};
 };

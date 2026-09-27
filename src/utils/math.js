@@ -1,3 +1,21 @@
+import { vec2sub } from './vector.js';
+
+
+/**
+ * Check if two circles overlap.
+ * @param  {Circle} c1
+ * @param  {Circle} c2
+ * @return {boolean}
+ */
+export function circleOverlap( c1, c2 ) {
+	const sub = vec2sub( c1, c2 );
+	const sqCenterDistance = sub.x * sub.x + sub.y * sub.y;
+	const sqRadiusSum = ( c1.r + c2.r ) * ( c1.r + c2.r );
+
+	return sqCenterDistance < sqRadiusSum;
+};
+
+
 /**
  * Clamp a value to a given range.
  * @param {number} value Value to clamp.
@@ -21,16 +39,34 @@ export function degToRad( degrees ) {
 
 
 /**
- * Check if a position is inside an axis-aligned bounding box.
+ * Check if a position is inside a circle.
  * @param {Vector2D} pos The position.
- * @param {AABB2D} aabb The axis-aligned bounding box.
+ * @param {Circle} c The circle.
  * @returns {boolean} True if pos is inside, false otherwise.
  */
-export function isInside( pos, aabb ) {
-	return pos.x >= aabb.x &&
-		pos.x <= aabb.x + aabb.w &&
-		pos.y >= aabb.y &&
-		pos.y <= aabb.y + aabb.h;
+export function isInsideCircle( pos, c ) {
+	// Short version:
+	// return vec2euclidDistance( pos, c ) <= c.r;
+
+	// Version without `Math.sqrt()`:
+	const diff = vec2sub( pos, c );
+	const sqDist = diff.x * diff.x + diff.y * diff.y;
+
+	return sqDist <= c.r * c.r;
+};
+
+
+/**
+ * Check if a position is inside an axis-aligned bounding box.
+ * @param {Vector2D} pos The position.
+ * @param {Rectangle} rect The axis-aligned bounding box.
+ * @returns {boolean} True if pos is inside, false otherwise.
+ */
+export function isInsideRect( pos, rect ) {
+	return pos.x >= rect.x &&
+		pos.x <= rect.x + rect.w &&
+		pos.y >= rect.y &&
+		pos.y <= rect.y + rect.h;
 };
 
 
@@ -63,4 +99,21 @@ export function numAsSignedStr( v ) {
  */
 export function radToDeg( radians ) {
 	return radians * 180 / Math.PI;
+};
+
+
+/**
+ * Check if two axis-aligned bounding boxes overlap.
+ * @param  {Rectangle} a
+ * @param  {Rectangle} b
+ * @return {boolean}
+ */
+export function rectOverlap( a, b ) {
+	let overlapX = Math.min( a.x + a.w, b.x + b.w ) - Math.max( a.x, b.x );
+	overlapX = ( overlapX < 0 ) ? 0 : overlapX;
+
+	let overlapY = Math.min( a.y + a.h, b.y + b.h ) - Math.max( a.y, b.y );
+	overlapY = ( overlapY < 0 ) ? 0 : overlapY;
+
+	return ( overlapX * overlapY > Number.EPSILON );
 };
