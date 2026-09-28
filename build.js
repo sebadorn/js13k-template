@@ -52,6 +52,11 @@ async function build() {
 	// Bundle and minify the code
 	const bundleFile = join( 'build', 'bundle.js' );
 
+	const configFile = join( tmpDir, 'src', 'config.js' );
+	let configContent = readFileSync( configFile ).toString();
+	configContent = configContent.replace( /export const devPath = .+;/, "export const devPath = '';" );
+	writeFileSync( configFile, configContent );
+
 	process.stdout.write( '  Running esbuild to create bundle...' );
 	await esbuild.build( {
 		bundle: true,

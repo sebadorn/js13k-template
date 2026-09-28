@@ -1,5 +1,11 @@
 export const achievementsUseLocalStorage = true;
 
+/**
+ * Used for local development. The build script will then change it to an empty string for a release build.
+ * @type {string}
+ */
+export const devPath = 'my-game/';
+
 export const fontMonospace = 'monospace';
 
 export const fontSansSerif = 'Verdana, Arial, sans-serif';
