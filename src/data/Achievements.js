@@ -1,3 +1,4 @@
+import { achievementsUseLocalStorage } from '../config.js';
 import { isNumber } from '../utils/compare.js';
 import { LocalStorage } from './storage.js';
 
@@ -14,10 +15,6 @@ export const Achievements = {
 		/** @type {achievementUpdateCallback[]} */
 		update: [],
 	},
-
-	/** @type {boolean} */
-	_useLocalStorage: true,
-
 
 	/** @type {Object.<string, Achievement>} */
 	achievements: {},
@@ -47,15 +44,12 @@ export const Achievements = {
 	 * Add the given achievements. Calling this function again
 	 * will add any new ones and override any with the same Id.
 	 * @param {Achievement[]} list
-	 * @param {boolean} [useLocalStorage = true]
 	 */
-	setup( list, useLocalStorage = true ) {
-		this._useLocalStorage = useLocalStorage;
-
+	setup( list ) {
 		list.forEach( a => {
 			this.achievements[a.id] = a;
 
-			if( this._useLocalStorage ) {
+			if( achievementsUseLocalStorage ) {
 				const progress = LocalStorage.get( `ach:${a.id}` );
 
 				if( isNumber( progress ) ) {
@@ -86,7 +80,7 @@ export const Achievements = {
 				this._callbacks.done.forEach( cb => cb( 'done', a ) );
 			}
 
-			if( this._useLocalStorage ) {
+			if( achievementsUseLocalStorage ) {
 				LocalStorage.set( `ach:${id}`, progress );
 			}
 		}

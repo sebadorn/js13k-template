@@ -1,3 +1,5 @@
+export const achievementsUseLocalStorage = true;
+
 export const fontMonospace = 'monospace';
 
 export const fontSansSerif = 'Verdana, Arial, sans-serif';
