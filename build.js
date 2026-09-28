@@ -1,4 +1,4 @@
-const { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync, statSync } = require( 'node:fs' );
+const { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync, statSync, readdirSync } = require( 'node:fs' );
 const { join, resolve } = require( 'node:path' );
 const esbuild = require( 'esbuild' );
 const terser = require( 'terser' );
@@ -24,8 +24,19 @@ if( existsSync( 'build' ) ) {
 const tmpDir = join( 'build', 'tmp' );
 mkdirSync( tmpDir, { recursive: true } );
 cpSync( 'src', join( tmpDir, 'src' ), { recursive: true } );
+
+const assets = [];
+const dir = readdirSync( join( tmpDir, 'src', 'my-game' ) );
+dir.forEach( entry => {
+	if( /\.(bmp|gif|jpeg|jpg|png|webp)$/i.test( entry ) ) {
+		assets.push( {
+			src: join( tmpDir, 'src', 'my-game', entry ),
+			out: entry,
+		} );
+	}
+} );
+
 console.log( '  Copied all source files' );
-// TODO: asset handling, e.g. image files
 
 
 // Minify index.html and replace name of entry script.
@@ -68,17 +79,18 @@ async function build() {
 	writeFileSync( join( 'build', 'i.js' ), terserResult.code, 'utf-8' );
 	console.log( ' Done' );
 
-	// Cleanup
-	rmSync( tmpDir, { force: true, recursive: true } );
-	console.log( '  Cleaned up build directory' );
-
+	// ZIP
 	process.stdout.write( '  Creating ZIP file...' );
 	const zip = new AdmZip();
 	zip.addLocalFile( join( 'build', 'i.js' ), '.', 'i.js' );
 	zip.addLocalFile( join( 'build', 'index.html' ), '.', 'index.html' );
-	// TODO: add assets
+	assets.forEach( asset => zip.addLocalFile( asset.src, '.', asset.out ) );
 	zip.writeZip( outFile );
 	console.log( ' Done' );
+
+	// Cleanup
+	rmSync( tmpDir, { force: true, recursive: true } );
+	console.log( '  Cleaned up build directory' );
 
 	const sizeBeforeECT = statSync( outFile ).size;
 
