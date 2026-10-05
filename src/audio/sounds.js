@@ -1,5 +1,5 @@
+import { zzfx } from '../thirdparty/ZzFX.js';
 import { isNumber } from '../utils/compare.js';
-import { zzfx } from './ZzFX.js';
 
 
 export const audioContext = new AudioContext();

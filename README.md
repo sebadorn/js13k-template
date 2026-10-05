@@ -42,7 +42,8 @@ python3 -m http.server
 
 ## Resources
 
-* [ZzFX – Zuper Zmall Zound Zynth](https://github.com/KilledByAPixel/ZzFX)
+* [Nano ID](https://github.com/ai/nanoid) (MIT license)
+* [ZzFX – Zuper Zmall Zound Zynth](https://github.com/KilledByAPixel/ZzFX) (MIT license)
 
 
 ---
