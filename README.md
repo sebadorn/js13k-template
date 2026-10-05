@@ -14,9 +14,8 @@ Copy and then modify or extend it as needed to build a new game.
 
 ## Requirements
 
-* NodeJS
-* esbuild
-* terser
+* NodeJS for building
+* optionally [Efficient Compression Tool](https://github.com/fhanau/Efficient-Compression-Tool) for better ZIP compression
 
 Targets modern browsers, which means recent versions of Firefox and Chromium.
 

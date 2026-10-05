@@ -3,7 +3,7 @@ const { join, resolve } = require( 'node:path' );
 const esbuild = require( 'esbuild' );
 const terser = require( 'terser' );
 const AdmZip = require( 'adm-zip' );
-const { execFileSync } = require('node:child_process');
+const { execFileSync } = require( 'node:child_process' );
 
 
 const ect = join( process.env.HOME, 'programming', 'Efficient-Compression-Tool', 'build', 'ect' );
