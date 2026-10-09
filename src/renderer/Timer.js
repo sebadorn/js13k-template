@@ -16,20 +16,40 @@ export class Timer {
 
 
 	/**
+	 * Get the internal timer time to use for calculations.
+	 * @private
+	 * @returns {number}
+	 */
+	_timerNow() {
+		return this.paused || this.level.timeSteps;
+	}
+
+
+	/**
 	 *
 	 * @returns {boolean}
 	 */
 	elapsed() {
-		return this.level.timeSteps > this.timeEnd;
+		return this._timerNow() > this.timeEnd;
 	}
 
 
 	/**
 	 * Get how much time is left.
-	 * @returns {number} The remaining time in seconds.
+	 * @returns {number} The remaining time in time steps. Will go into the negative after end of duration.
 	 */
 	left() {
-		return this.timeEnd - this.level.timeSteps;
+		return this.timeEnd - this._timerNow();
+	}
+
+
+	/**
+	 * Pause the timer.
+	 */
+	pause() {
+		if( !this.paused ) {
+			this.paused = this.level.timeSteps;
+		}
 	}
 
 
@@ -51,12 +71,24 @@ export class Timer {
 
 
 	/**
-	 * Reset the timer to a new duration.
+	 * Reset the timer to a new duration. Will unpause a paused timer.
 	 * @param {number} duration Duration in game seconds.
 	 */
 	set( duration ) {
 		this.duration = duration * this.level.renderer.targetFPS;
 		this.timeEnd = this.level.timeSteps + this.duration;
+		this.paused = 0;
+	}
+
+
+	/**
+	 * Unpause a paused timer.
+	 */
+	unpause() {
+		if( this.paused ) {
+			this.timeEnd += this.level.timeSteps - this.paused;
+			this.paused = 0;
+		}
 	}
 
 
