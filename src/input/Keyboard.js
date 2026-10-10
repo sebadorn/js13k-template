@@ -47,75 +47,78 @@ export const KeyboardInput = {
 	},
 
 
-	/**
-	 *
-	 * @param {string[]} keys
-	 * @param {boolean?} forget
-	 * @returns {boolean}
-	 */
-	isPressed( keys, forget ) {
-		for( const key of keys ) {
-			if( this.isPressedKey( key, forget ) ) {
-				return true;
-			}
-		}
-
-		return false;
-	},
+};
 
 
-	/**
-	 * Check if a key is currently being pressed.
-	 * @param {number}  code   - Key code.
-	 * @param {boolean} forget
-	 * @returns {boolean}
-	 */
-	isPressedKey( code, forget ) {
-		const ks = this.keystate[code];
-
-		if( ks?.time ) {
-			if( forget ) {
-				ks.time = 0;
-				ks.waitForReset = true;
-			}
-
+/**
+ * Requires `KeyboardInput.setup()` to have been called first.
+ * @param {string[]} keys
+ * @param {boolean?} forget
+ * @returns {boolean}
+ */
+export function inputIsPressedOneOfKeys( keys, forget ) {
+	for( const key of keys ) {
+		if( inputIsPressedKey( key, forget ) ) {
 			return true;
 		}
+	}
 
-		return false;
-	},
-
-
-	/**
-	 * Add a listener for the keydown event.
-	 * @param {string|string[]} codes - Key code(s).
-	 * @param {Function}        cb    - Callback.
-	 */
-	onKeyDown( codes, cb ) {
-		codes = !Array.isArray( codes ) ? [codes] : codes;
-
-		codes.forEach( code => {
-			const list = this._onKeyDown[code] || [];
-			list.push( cb );
-			this._onKeyDown[code] = list;
-		} );
-	},
+	return false;
+};
 
 
-	/**
-	 * Add a listener for the keyup event.
-	 * @param {string|string[]} codes - Key code(s).
-	 * @param {Function}        cb    - Callback.
-	 */
-	onKeyUp( codes, cb ) {
-		codes = !Array.isArray( codes ) ? [codes] : codes;
+/**
+ * Check if a key is currently being pressed.
+ * Requires `KeyboardInput.setup()` to have been called first.
+ * @param {number}  code   - Key code.
+ * @param {boolean} forget
+ * @returns {boolean}
+ */
+export function inputIsPressedKey( code, forget ) {
+	const ks = KeyboardInput.keystate[code];
 
-		codes.forEach( code => {
-			const list = this._onKeyUp[code] || [];
-			list.push( cb );
-			this._onKeyUp[code] = list;
-		} );
-	},
+	if( ks?.time ) {
+		if( forget ) {
+			ks.time = 0;
+			ks.waitForReset = true;
+		}
+
+		return true;
+	}
+
+	return false;
+};
 
 
+/**
+ * Add a listener for the keydown event.
+ * Requires `KeyboardInput.setup()` to have been called first.
+ * @param {string|string[]} codes - Key code(s).
+ * @param {Function}        cb    - Callback.
+ */
+export function inputOnKeyDown( codes, cb ) {
+	codes = !Array.isArray( codes ) ? [codes] : codes;
+
+	codes.forEach( code => {
+		const list = KeyboardInput._onKeyDown[code] || [];
+		list.push( cb );
+		KeyboardInput._onKeyDown[code] = list;
+	} );
+};
+
+
+/**
+ * Add a listener for the keyup event.
+ * Requires `KeyboardInput.setup()` to have been called first.
+ * @param {string|string[]} codes - Key code(s).
+ * @param {Function}        cb    - Callback.
+ */
+export function inputOnKeyUp( codes, cb ) {
+	codes = !Array.isArray( codes ) ? [codes] : codes;
+
+	codes.forEach( code => {
+		const list = KeyboardInput._onKeyUp[code] || [];
+		list.push( cb );
+		KeyboardInput._onKeyUp[code] = list;
+	} );
 };
