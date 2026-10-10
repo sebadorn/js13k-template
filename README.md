@@ -15,6 +15,7 @@ Copy and then modify or extend it as needed to build a new game.
 ## Requirements
 
 * NodeJS for building
+* [pnpm](https://pnpm.io/) as package manager
 * optionally [Efficient Compression Tool](https://github.com/fhanau/Efficient-Compression-Tool) for better ZIP compression
 
 Targets modern browsers, which means recent versions of Firefox and Chromium.
@@ -23,7 +24,7 @@ Targets modern browsers, which means recent versions of Firefox and Chromium.
 ## Build
 
 ```sh
-npm run build
+pnpm build
 # or
 node build.js
 ```
