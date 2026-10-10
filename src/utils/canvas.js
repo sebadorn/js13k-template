@@ -65,19 +65,20 @@ export function canvasTrim( canvas ) {
 			const pxIndex = ( y * imageData.width + x ) * 4;
 			const pxAlpha = imageData.data[pxIndex + 3];
 
+			// Pixel is fully transparent
 			if( pxAlpha === 0 ) {
 				continue;
 			}
 
-			left = left > x ? x : left;
-			right = right < x ? x : right;
-			top = top > y ? y : top;
-			bottom = bottom < y ? y : bottom;
+			if( left > x ) { left = x; }
+			if( right < x ) { right = x; }
+			if( top > y ) { top = y; }
+			if( bottom < y ) { bottom = y; }
 		}
 	}
 
-	const newWidth = right - left;
-	const newHeight = bottom - top;
+	const newWidth = right - left + 1;
+	const newHeight = bottom - top + 1;
 
 	const [copyCnv, copyCtx] = offscreenCreate( newWidth, newHeight );
 	copyCtx.drawImage(
