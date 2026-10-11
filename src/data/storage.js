@@ -79,6 +79,7 @@ export const MemoryStorage = {
 
 	/**
 	 * Put a value into the storage.
+	 * Object values are stored as references and not as copy. So outside changes will affect it.
 	 * @param {string|number} key
 	 * @param {any} value
 	 */
@@ -87,4 +88,14 @@ export const MemoryStorage = {
 	},
 
 
+};
+
+
+/**
+ * Create a deep copy of the given object. Does not work with classes and functions.
+ * @param {Object} value
+ * @returns {Object}
+ */
+export function deepCopy( value ) {
+	return JSON.parse( JSON.stringify( value ) );
 };
