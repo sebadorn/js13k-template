@@ -1,5 +1,9 @@
+import { generatePinkNoise } from '../../audio/sounds.js';
+import { MemoryStorage } from '../../data/storage.js';
 import { Level } from '../../renderer/Level.js';
-import { circle } from '../../utils/canvas.js';
+import { Timer } from '../../renderer/Timer.js';
+import { circle, fromImageToCanvas } from '../../utils/canvas.js';
+import { isInsideRect } from '../../utils/math.js';
 
 
 export class LevelIndex extends Level {
@@ -11,6 +15,8 @@ export class LevelIndex extends Level {
 	 */
 	constructor( renderer ) {
 		super( renderer );
+		this.figure = fromImageToCanvas( MemoryStorage.get( 'tiles' ), 0, 32, 16, 16 )[0];
+		this.timer = new Timer( this, 60 );
 	}
 
 
@@ -19,6 +25,8 @@ export class LevelIndex extends Level {
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
 	draw( ctx ) {
+		this.preDraw( ctx );
+
 		ctx.fillStyle = '#fff';
 		ctx.textAlign = 'center';
 		ctx.font = '500 26px monospace';
@@ -34,6 +42,32 @@ export class LevelIndex extends Level {
 		ctx.moveTo( 100, 300 );
 		ctx.lineTo( 300, 600 );
 		ctx.stroke();
+
+		ctx.drawImage( this.figure, 400, 200, 64, 64 );
+
+		ctx.fillStyle = '#fff';
+		const timeLeft = this.timer.left() / this.renderer.targetFPS;
+		ctx.fillText( timeLeft.toFixed( 0 ) + 's', this.renderer.width / 2, 100 );
+
+		this.postDraw( ctx );
+	}
+
+
+	/**
+	 *
+	 * @param {Vector2D} pos
+	 */
+	onClick( pos ) {
+		if( isInsideRect( pos, { x: 100, y: 100, w: 200, h: 200 } ) ) {
+			generatePinkNoise( { duration: 3 } );
+		}
+
+		if( this.timer.paused ) {
+			this.timer.unpause();
+		}
+		else {
+			this.timer.pause();
+		}
 	}
 
 

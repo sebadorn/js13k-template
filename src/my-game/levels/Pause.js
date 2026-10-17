@@ -31,7 +31,11 @@ export class Pause extends Level {
 		ctx.textAlign = 'center';
 		ctx.fillStyle = '#fff';
 		ctx.font = `500 46px ${fontMonospace}`;
-		ctx.fillText( 'PAUSED', this.renderer.width / 2, this.renderer.height / 2 - 100 );
+		ctx.fillText(
+			'PAUSED',
+			this.renderer.width / 2,
+			this.renderer.height / 2 - 100 + Math.sin( this.timeSteps / 20 ) * 10
+		);
 	}
 
 

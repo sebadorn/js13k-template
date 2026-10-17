@@ -25,4 +25,4 @@ export const localStoragePrefix = 'js13k<year>.<title>';
  * Enable/disable image smoothing for a game in pixel style.
  * @type {boolean}
  */
-export const pixelMode = false;
+export const pixelMode = true;

@@ -1,10 +1,16 @@
+import { devPath } from '../config.js';
+import { Achievements } from '../data/Achievements.js';
+import { MemoryStorage } from '../data/storage.js';
+import { GamepadInput } from '../input/Gamepad.js';
+import { inputOnKeyUp, KeyboardInput } from '../input/Keyboard.js';
+import { MouseInput } from '../input/Mouse.js';
 import { FPSCounter } from '../renderer/FPSCounter.js';
 import { Renderer } from '../renderer/Renderer.js';
-import { KeyboardInput } from '../input/Keyboard.js';
+import { loadImage } from '../utils/file.js';
+
 import { LevelIndex } from './levels/LevelIndex.js';
-import { GamepadInput } from '../input/Gamepad.js';
-import { MouseInput } from '../input/Mouse.js';
 import { Pause } from './levels/Pause.js';
+import { RippleClickEffect } from './my-effects.js';
 
 
 /**
@@ -29,18 +35,34 @@ export class MyGame {
 				onUpdate: dt => this.update( dt ),
 				onDraw: ctx => this.draw( ctx ),
 			}
-		).mainLoop();
+		);
+
+		Achievements.setup( [] );
 
 		GamepadInput.setup();
 
 		KeyboardInput.setup();
-		KeyboardInput.onKeyUp( 'Escape', _ev => {
+		inputOnKeyUp( 'Escape', _ev => {
 			this.renderer.togglePause();
 		} );
 
 		MouseInput.setup( this.renderer, ['click', 'mousemove'] );
+		MouseInput.on( 'click', ( _ev, pos ) => {
+			if( this.level ) {
+				this.level.onClick?.( pos );
 
-		this.level = new LevelIndex( this.renderer );
+				const clickEffect = new RippleClickEffect( this.level, 1 );
+				clickEffect.pos = pos;
+
+				this.level.effects.push( clickEffect );
+			}
+		} );
+
+		loadImage( `${devPath}tiles.png` ).then( img => {
+			MemoryStorage.put( 'tiles', img );
+			this.level = new LevelIndex( this.renderer );
+			this.renderer.mainLoop();
+		} );
 	}
 
 
