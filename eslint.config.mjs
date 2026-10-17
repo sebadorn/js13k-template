@@ -43,14 +43,7 @@ export default [
 			],
 			'@stylistic/no-empty': 0,
 			'no-sparse-arrays': 0,
-			'no-unused-vars': [
-				'warn',
-				{
-					argsIgnorePattern: '^_',
-					varsIgnorePattern: '^_',
-					caughtErrorsIgnorePattern: '^_',
-				},
-			],
+			'no-unused-vars': 0,
 			'no-var': ['error'],
 			'@stylistic/one-var-declaration-per-line': ['warn', 'always'],
 			'@stylistic/quotes': [
