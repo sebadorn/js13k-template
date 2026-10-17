@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 const a = 'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
 
-export function nanoid( length = 21 ) {
+export function uid( length = 21 ) {
 	let t = '';
 	const r = crypto.getRandomValues( new Uint8Array( length |= 0 ) );
 
