@@ -4,6 +4,7 @@ import { MemoryStorage } from '../data/storage.js';
 import { GamepadInput } from '../input/Gamepad.js';
 import { inputOnKeyUp, KeyboardInput } from '../input/Keyboard.js';
 import { MouseInput } from '../input/Mouse.js';
+import { EffectShake } from '../renderer/effects.js';
 import { FPSCounter } from '../renderer/FPSCounter.js';
 import { Renderer } from '../renderer/Renderer.js';
 import { loadImage } from '../utils/file.js';
@@ -54,7 +55,10 @@ export class MyGame {
 				const clickEffect = new RippleClickEffect( this.level, 1 );
 				clickEffect.pos = pos;
 
-				this.level.effects.push( clickEffect );
+				const shakeEffect = new EffectShake( this.level, 0.2 );
+				shakeEffect.strength = 5;
+
+				this.level.effects.push( clickEffect, shakeEffect );
 			}
 		} );
 
