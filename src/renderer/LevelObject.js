@@ -35,6 +35,7 @@ export class LevelObject {
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
 	preDraw( ctx ) {
+		this.ctx.clearRect( 0, 0, this.w, this.h );
 		this.effects.forEach( effect => effect.preDraw( ctx ) );
 	}
 
