@@ -1,4 +1,5 @@
 import { removeItem } from '../utils/array.js';
+import { randInt } from '../utils/random.js';
 import { Timer } from './Timer.js';
 
 
@@ -70,6 +71,36 @@ export class Effect {
 				}
 			}
 		}
+	}
+
+
+};
+
+
+export class EffectShake extends Effect {
+
+
+	strength = 10;
+
+
+	/**
+	 *
+	 * @param {CanvasRenderingContext2D} ctx
+	 */
+	preDraw( ctx ) {
+		this._x = randInt( -this.strength, this.strength );
+		this._y = randInt( -this.strength, this.strength );
+
+		ctx.translate( this._x, this._y );
+	}
+
+
+	/**
+	 *
+	 * @param {CanvasRenderingContext2D} ctx
+	 */
+	postDraw( ctx ) {
+		ctx.translate( -this._x, -this._y );
 	}
 
 
