@@ -54,6 +54,22 @@ export function degToRad( degrees ) {
 
 
 /**
+ * Cubic ease-in-out function.
+ * @param {number} p Progress value [0, 1].
+ * @returns {number} [0, 1]
+ */
+export function easeInOutCubic( p ) {
+	if( p < 0.5 ) {
+		return 4 * p * p * p;
+	}
+
+	const a = 2 - p - p;
+
+	return 1 - a * a * a / 2;
+};
+
+
+/**
  * Check if a position is inside a circle.
  * @param {Vector2D} pos The position.
  * @param {Circle} c The circle.
