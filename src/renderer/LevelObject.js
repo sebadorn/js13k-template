@@ -30,10 +30,14 @@ export class LevelObject extends EventClass {
 
 
 	/**
-	 *
+	 * Add this LevelObject to a level. Calling it again will remove it from the previous level.
 	 * @param {import('./Level').Level} level
 	 */
 	addTo( level ) {
+		if( this.level ) {
+			this.remove();
+		}
+
 		this.level = level;
 
 		this._cbUpdate = level.addListener( eventTypeUpdate, dt => this.update( dt ) );
