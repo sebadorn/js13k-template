@@ -1,3 +1,6 @@
+import { eventTypeRendererUpdate } from './EventClass.js';
+
+
 /**
  * The FPSCounter class is supposed to help while developing and not to be a part of the final game.
  * Therefore the UI is not configurable and size is of no concern.
@@ -16,8 +19,9 @@ export class FPSCounter {
 
 	/**
 	 *
+	 * @param {import('./Renderer').Renderer} renderer
 	 */
-	constructor() {
+	constructor( renderer ) {
 		const node = document.createElement( 'div' );
 		node.style.background = '#fff';
 		node.style.color = '#000';
@@ -32,29 +36,13 @@ export class FPSCounter {
 		this.node = node;
 
 		document.body.append( this.node );
-	}
 
+		this._targetFPS = renderer.targetFPS;
 
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get average() {
-		const sum = this._history.reduce( ( prev, current ) => prev + current, 0 );
-
-		return Math.round( sum / FPSCounter.historyLimit );
-	}
-
-
-	/**
-	 *
-	 * @param {number} targetFPS
-	 * @returns {FPSCounter}
-	 */
-	setTargetFPS( targetFPS ) {
-		this._targetFPS = targetFPS;
-
-		return this;
+		renderer.addListener(
+			eventTypeRendererUpdate,
+			dt => this._update( dt, renderer.scale )
+		);
 	}
 
 
@@ -63,7 +51,7 @@ export class FPSCounter {
 	 * @param {number} dt
 	 * @param {number} scale
 	 */
-	update( dt, scale ) {
+	_update( dt, scale ) {
 		this._time += dt;
 		this._history.push( this._targetFPS / dt );
 
@@ -78,6 +66,17 @@ export class FPSCounter {
 			this.node.textContent = `${this.average.toString().padStart( 3, '0' )} FPS / ${scale}`;
 			this._time = 0;
 		}
+	}
+
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get average() {
+		const sum = this._history.reduce( ( prev, current ) => prev + current, 0 );
+
+		return Math.round( sum / FPSCounter.historyLimit );
 	}
 
 

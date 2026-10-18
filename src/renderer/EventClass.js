@@ -51,4 +51,7 @@ export const eventTypeAfterDraw = 'ad';
 export const eventTypeDraw = 'd';
 export const eventTypeBeforeDraw = 'bd';
 export const eventTypeDone = 'done';
+export const eventTypeRendererPausedDraw = 'rpd';
+export const eventTypeRendererPausedUpdate = 'rpu';
+export const eventTypeRendererUpdate = 'ru';
 export const eventTypeUpdate = 'u';

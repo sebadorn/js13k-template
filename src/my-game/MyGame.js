@@ -5,7 +5,7 @@ import { GamepadInput } from '../input/Gamepad.js';
 import { inputOnKeyUp, KeyboardInput } from '../input/Keyboard.js';
 import { MouseInput } from '../input/Mouse.js';
 import { EffectShake } from '../renderer/effects.js';
-import { eventTypeDraw, eventTypeUpdate } from '../renderer/EventClass.js';
+import { eventTypeDraw, eventTypeRendererPausedDraw, eventTypeRendererPausedUpdate, eventTypeUpdate } from '../renderer/EventClass.js';
 import { FPSCounter } from '../renderer/FPSCounter.js';
 import { Renderer } from '../renderer/Renderer.js';
 import { loadImage } from '../utils/file.js';
@@ -26,34 +26,39 @@ export class MyGame {
 	 *
 	 */
 	constructor() {
-		this.renderer = new Renderer( 1920, 1080 );
-		this.renderer.setup(
+		const renderer = this.renderer = new Renderer( 1920, 1080 );
+		renderer.setup(
 			document.body,
 			{
 				targetFPS: 60,
 				targetRatio: 16 / 9,
-				fpsCounter: new FPSCounter(),
-				pauseHandler: new Pause( this ),
 			}
 		);
-		this.renderer.addListener( eventTypeUpdate, dt => this.update( dt ) );
-		this.renderer.addListener( eventTypeDraw, ctx => this.draw( ctx ) );
+
+		renderer.addListener( eventTypeUpdate, dt => this.update( dt ) );
+		renderer.addListener( eventTypeDraw, ctx => this.draw( ctx ) );
+
+		const pauseLevel = new Pause( this );
+		renderer.addListener( eventTypeRendererPausedUpdate, dt => pauseLevel.update( dt ) );
+		renderer.addListener( eventTypeRendererPausedDraw, ctx => pauseLevel.draw( ctx ) );
+
+		new FPSCounter( renderer );
 
 		Achievements.setup( [] );
 
-		const gi = new GamepadInput( this.renderer );
+		const gi = new GamepadInput( renderer );
 		gi.addListener( 'gp_connected', ev => {
 			console.debug( ev );
 		} );
 
 		KeyboardInput.setup();
 		inputOnKeyUp( 'Escape', _ev => {
-			this.renderer.togglePause();
+			renderer.togglePause();
 		} );
 
-		const mi = new MouseInput( this.renderer, ['click', 'mousemove'] );
+		const mi = new MouseInput( renderer, ['click', 'mousemove'] );
 		mi.addListener( 'click', pos => {
-			if( !this.renderer.isPaused && this.level ) {
+			if( !renderer.isPaused && this.level ) {
 				this.level.onClick?.( pos );
 
 				const clickEffect = new RippleClickEffect();
@@ -67,8 +72,8 @@ export class MyGame {
 
 		loadImage( `${devPath}tiles.png` ).then( img => {
 			MemoryStorage.put( 'tiles', img );
-			this.level = new LevelIndex( this.renderer );
-			this.renderer.mainLoop();
+			this.level = new LevelIndex( renderer );
+			renderer.mainLoop();
 		} );
 	}
 

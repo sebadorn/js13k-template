@@ -1,6 +1,6 @@
 import { pixelMode } from '../config.js';
 import { canvasCreate, canvasSetSize } from '../utils/canvas.js';
-import { EventClass, eventTypeDraw, eventTypeUpdate } from './EventClass.js';
+import { EventClass, eventTypeDraw, eventTypeRendererPausedDraw, eventTypeRendererPausedUpdate, eventTypeRendererUpdate, eventTypeUpdate } from './EventClass.js';
 
 
 export class Renderer extends EventClass {
@@ -80,17 +80,15 @@ export class Renderer extends EventClass {
 			this.timeSteps += dt;
 
 			if( this._isPaused ) {
-				if( this.pauseHandler ) {
-					this.pauseHandler.update( dt );
-					this.pauseHandler.draw( this.ctx );
-				}
+				this.trigger( eventTypeRendererPausedUpdate, dt );
+				this.trigger( eventTypeRendererPausedDraw, this.ctx );
 			}
 			else {
 				this.trigger( eventTypeUpdate, dt );
 				this.trigger( eventTypeDraw, this.ctx );
 			}
 
-			this.fpsCounter?.update( dt, this.scale );
+			this.trigger( eventTypeRendererUpdate, dt );
 		}
 
 		this.last = timestamp;
@@ -148,8 +146,6 @@ export class Renderer extends EventClass {
 	 *
 	 * @param {HTMLElement} domParent
 	 * @param {Object} options
-	 * @param {import('./FPSCounter').FPSCounter?} options.fpsCounter
-	 * @param {PauseHandler?} options.pauseHandler
 	 * @param {number?} [options.targetFPS = 60]
 	 * @param {number?} options.targetRatio A target ratio to keep for the canvas size, e.g. `16 / 9`, `4 / 3` etc.
 	 *     Setting a ratio will change the originally set width and height to fit the window.
@@ -158,11 +154,8 @@ export class Renderer extends EventClass {
 	setup( domParent, options ) {
 		domParent.append( this.canvas );
 
-		this.pauseHandler = options.pauseHandler;
 		this.targetFPS = options.targetFPS || 60;
 		this.targetRatio = options.targetRatio > 0 ? options.targetRatio : 0;
-
-		this.fpsCounter = options.fpsCounter?.setTargetFPS( this.targetFPS );
 
 		// Target speed of 60 FPS (=> 1000 / 60 ~= 16.667 [ms]).
 		this._targetFrameTime = 1000 / this.targetFPS;
@@ -204,10 +197,4 @@ export class Renderer extends EventClass {
 /**
  * @callback updateFunction
  * @param {number} dt
- */
-
-/**
- * @typedef {Object} PauseHandler
- * @property {drawFunction} draw
- * @property {updateFunction} update
  */
