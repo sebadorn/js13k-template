@@ -30,7 +30,7 @@ export class GamepadInput extends EventClass {
 			this.trigger( ev.type, ev );
 		} );
 
-		renderer.addListener( eventTypeUpdate, dt => this.update() );
+		renderer.addListener( eventTypeUpdate, dt => this._update() );
 	}
 
 
