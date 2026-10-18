@@ -1,7 +1,8 @@
 import { offscreenCreate } from '../utils/canvas.js';
+import { EventClass, eventTypeAfterDraw, eventTypeBeforeDraw, eventTypeUpdate } from './EventClass.js';
 
 
-export class LevelObject {
+export class LevelObject extends EventClass {
 
 
 	/** @type {OffscreenCanvas} */
@@ -10,17 +11,15 @@ export class LevelObject {
 	/** @type {CanvasRenderingContext2D} */
 	ctx;
 
-	/** @type {import('./effects').Effect[]} */
-	effects = [];
-
 
 	/**
 	 *
 	 * @param {import('./Level').Level} level
 	 * @param {Rectangle} rect
 	 */
-	constructor( level, rect ) {
-		this.level = level;
+	constructor( rect ) {
+		super();
+
 		this.x = rect.x;
 		this.y = rect.y;
 		this.w = rect.w;
@@ -32,11 +31,32 @@ export class LevelObject {
 
 	/**
 	 *
+	 * @param {import('./Level').Level} level
+	 */
+	addTo( level ) {
+		this.level = level;
+
+		this._cbUpdate = level.addListener( eventTypeUpdate, dt => this.update( dt ) );
+		this._cbAfterDraw = level.addListener( eventTypeAfterDraw, ctx => this.draw( ctx ) );
+	}
+
+
+	/**
+	 *
+	 */
+	remove() {
+		this.level.removeListener( eventTypeUpdate, this._cbUpdate );
+		this.level.removeListener( eventTypeAfterDraw, this._cbAfterDraw );
+	}
+
+
+	/**
+	 *
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
-	preDraw( ctx ) {
+	beforeDraw( ctx ) {
 		this.ctx.clearRect( 0, 0, this.w, this.h );
-		this.effects.forEach( effect => effect.preDraw( ctx ) );
+		this.trigger( eventTypeBeforeDraw, ctx );
 	}
 
 
@@ -45,7 +65,9 @@ export class LevelObject {
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
 	draw( ctx ) {
+		this.beforeDraw( ctx );
 		ctx.drawImage( this.canvas, this.x, this.y, this.w, this.h );
+		this.afterDraw( ctx );
 	}
 
 
@@ -53,8 +75,8 @@ export class LevelObject {
 	 *
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
-	postDraw( ctx ) {
-		this.effects.forEach( effect => effect.postDraw( ctx ) );
+	afterDraw( ctx ) {
+		this.trigger( eventTypeAfterDraw, ctx );
 	}
 
 
@@ -63,7 +85,7 @@ export class LevelObject {
 	 * @param {number} dt
 	 */
 	update( dt ) {
-		this.effects.forEach( effect => effect.update( dt ) );
+		this.trigger( eventTypeUpdate, dt );
 	}
 
 

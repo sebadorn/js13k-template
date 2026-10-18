@@ -1,11 +1,8 @@
-export class Level {
+import { EventClass, eventTypeAfterDraw, eventTypeBeforeDraw, eventTypeUpdate } from './EventClass.js';
 
 
-	/** @type {import('./effects').Effect[]} */
-	effects = [];
+export class Level extends EventClass {
 
-	/** @type {import('./LevelObject').LevelObject[]} */
-	objects = [];
 
 	timeSteps = 0;
 
@@ -15,6 +12,7 @@ export class Level {
 	 * @param {import('./Renderer').Renderer} renderer The renderer this level is used in.
 	 */
 	constructor( renderer ) {
+		super();
 		this.renderer = renderer;
 	}
 
@@ -23,9 +21,8 @@ export class Level {
 	 *
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
-	preDraw( ctx ) {
-		this.effects.forEach( effect => effect.preDraw( ctx ) );
-		this.objects.forEach( o => o.preDraw( ctx ) );
+	beforeDraw( ctx ) {
+		this.trigger( eventTypeBeforeDraw, ctx );
 	}
 
 
@@ -35,7 +32,7 @@ export class Level {
 	 */
 	draw( ctx ) {
 		// this.preDraw( ctx );
-		// this.objects.forEach( o => o.draw( ctx ) );
+		// ...
 		// this.postDraw( ctx );
 	}
 
@@ -44,9 +41,8 @@ export class Level {
 	 *
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
-	postDraw( ctx ) {
-		this.objects.forEach( o => o.postDraw( ctx ) );
-		this.effects.forEach( effect => effect.postDraw( ctx ) );
+	afterDraw( ctx ) {
+		this.trigger( eventTypeAfterDraw, ctx );
 	}
 
 
@@ -56,8 +52,7 @@ export class Level {
 	 */
 	update( dt ) {
 		this.timeSteps += dt;
-		this.effects.forEach( effect => effect.update( dt ) );
-		this.objects.forEach( o => o.update( dt ) );
+		this.trigger( eventTypeUpdate, dt );
 	}
 
 

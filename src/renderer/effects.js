@@ -1,40 +1,62 @@
-import { removeItem } from '../utils/array.js';
 import { randInt } from '../utils/random.js';
+import { EventClass, eventTypeAfterDraw, eventTypeBeforeDraw, eventTypeDone, eventTypeUpdate } from './EventClass.js';
 import { Timer } from './Timer.js';
 
 
-export class Effect {
+export class Effect extends EventClass {
 
 
 	isDone = false;
 
-	/** @type {Function[]} */
-	onDone = [];
-
 
 	/**
 	 *
-	 * @param {import('./LevelObject').LevelObject | import('./Level').Level} levelObjectOrLevel
-	 * @param {number} duration
 	 * @param {Object?} options
-	 * @param {boolean} [options.loop = false]
-	 * @param {boolean} [options.removeWhenDone = true]
+	 * @param {boolean} [options.loop = false] Default is not to loop.
+	 * @param {boolean} [options.removeWhenDone = true] Default is that a non-looping effect automatically removes itself when the duration has elapsed.
 	 */
 	constructor(
-		levelObjectOrLevel,
-		duration,
 		{
 			loop = false,
 			removeWhenDone = true,
 		} = {}
 	) {
-		this.l = levelObjectOrLevel;
-		this.timer = new Timer(
-			levelObjectOrLevel.level || levelObjectOrLevel,
-			duration
-		);
+		super();
+
 		this.loop = loop;
 		this.removeWhenDone = removeWhenDone;
+	}
+
+
+	/**
+	 * Apply the effect to a LevelObject or Level. An effect can only be
+	 * active on one target at a time. Calling `applyTo()` again will
+	 * cancel it on the previously applied target and start again on the new target.
+	 * @param {import('./LevelObject').LevelObject | import('./Level').Level} target 
+	 * @param {number} duration Duration of the effect in seconds.
+	 */
+	applyTo( target, duration ) {
+		if( this.l ) {
+			this.cancel();
+		}
+
+		this.l = target;
+		this.timer = new Timer( target?.level || target, duration );
+
+		this._cbUpdate = target.addListener( eventTypeUpdate, dt => this.update( dt ) );
+		this._cbBeforeDraw = target.addListener( eventTypeBeforeDraw, ctx => this.beforeDraw( ctx ) );
+		this._cbAfterDraw = target.addListener( eventTypeAfterDraw, ctx => this.afterDraw( ctx ) );
+	}
+
+
+	/**
+	 * Cancel an effect and completely unregister it.
+	 */
+	cancel() {
+		this.isDone = true;
+		this.l.removeListener( eventTypeUpdate, this._cbUpdate );
+		this.l.removeListener( eventTypeBeforeDraw, this._cbBeforeDraw );
+		this.l.removeListener( eventTypeAfterDraw, this._cbAfterDraw );
 	}
 
 
@@ -42,14 +64,14 @@ export class Effect {
 	 *
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
-	preDraw( ctx ) {}
+	beforeDraw( ctx ) {}
 
 
 	/**
 	 *
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
-	postDraw( ctx ) {}
+	afterDraw( ctx ) {}
 
 
 	/**
@@ -58,7 +80,7 @@ export class Effect {
 	 */
 	update( dt ) {
 		if( !this.isDone && this.timer.elapsed() ) {
-			this.onDone.forEach( cb => cb() );
+			this.trigger( eventTypeDone );
 
 			if( this.loop ) {
 				this.timer.restart();
@@ -67,7 +89,7 @@ export class Effect {
 				this.isDone = true;
 
 				if( this.removeWhenDone ) {
-					removeItem( this.l.effects, this );
+					this.cancel();
 				}
 			}
 		}
@@ -80,14 +102,14 @@ export class Effect {
 export class EffectShake extends Effect {
 
 
-	strength = 10;
+	strength = 5;
 
 
 	/**
 	 *
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
-	preDraw( ctx ) {
+	beforeDraw( ctx ) {
 		this._x = randInt( -this.strength, this.strength );
 		this._y = randInt( -this.strength, this.strength );
 
@@ -99,7 +121,7 @@ export class EffectShake extends Effect {
 	 *
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
-	postDraw( ctx ) {
+	afterDraw( ctx ) {
 		ctx.translate( -this._x, -this._y );
 	}
 
@@ -117,6 +139,6 @@ export function chainEffects( ...effects ) {
 		const next = effects[i + 1];
 
 		next.timer.pause();
-		effect.onDone.push( () => next.timer.restart() );
+		effect.addListener( eventTypeDone, () => next.timer.restart() );
 	}
 };

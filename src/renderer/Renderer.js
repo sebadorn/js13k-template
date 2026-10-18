@@ -1,8 +1,9 @@
 import { pixelMode } from '../config.js';
 import { canvasCreate, canvasSetSize } from '../utils/canvas.js';
+import { EventClass, eventTypeDraw, eventTypeUpdate } from './EventClass.js';
 
 
-export class Renderer {
+export class Renderer extends EventClass {
 
 
 	/** @type {HTMLCanvasElement} */
@@ -38,6 +39,8 @@ export class Renderer {
 	 * @param {number} height
 	 */
 	constructor( width, height ) {
+		super();
+
 		[this.canvas, this.ctx] = canvasCreate( width, height );
 		this.originalWidth = width;
 		this.originalHeight = height;
@@ -51,6 +54,15 @@ export class Renderer {
 		this.ctx.setTransform( this.scale, 0, 0, this.scale, 0, 0 );
 		this.ctx.clearRect( 0, 0, this.width, this.height );
 		this.ctx.imageSmoothingEnabled = !pixelMode;
+	}
+
+
+	/**
+	 *
+	 * @returns {boolean}
+	 */
+	get isPaused() {
+		return this._isPaused;
 	}
 
 
@@ -74,8 +86,8 @@ export class Renderer {
 				}
 			}
 			else {
-				this.onUpdate?.( dt );
-				this.onDraw?.( this.ctx );
+				this.trigger( eventTypeUpdate, dt );
+				this.trigger( eventTypeDraw, this.ctx );
 			}
 
 			this.fpsCounter?.update( dt, this.scale );
@@ -137,8 +149,6 @@ export class Renderer {
 	 * @param {HTMLElement} domParent
 	 * @param {Object} options
 	 * @param {import('./FPSCounter').FPSCounter?} options.fpsCounter
-	 * @param {drawFunction} options.onDraw
-	 * @param {updateFunction} options.onUpdate
 	 * @param {PauseHandler?} options.pauseHandler
 	 * @param {number?} [options.targetFPS = 60]
 	 * @param {number?} options.targetRatio A target ratio to keep for the canvas size, e.g. `16 / 9`, `4 / 3` etc.
@@ -148,8 +158,6 @@ export class Renderer {
 	setup( domParent, options ) {
 		domParent.append( this.canvas );
 
-		this.onDraw = options.onDraw;
-		this.onUpdate = options.onUpdate;
 		this.pauseHandler = options.pauseHandler;
 		this.targetFPS = options.targetFPS || 60;
 		this.targetRatio = options.targetRatio > 0 ? options.targetRatio : 0;

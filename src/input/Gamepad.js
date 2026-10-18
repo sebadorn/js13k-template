@@ -1,15 +1,70 @@
-export const GamepadInput = {
+import { EventClass, eventTypeUpdate } from '../renderer/EventClass.js';
 
 
-	_gpButtons: {},
-	_ignoreUntilReleased: {},
-	_on: {
-		'gp_connect': [],
-		'gp_disconnect': []
-	},
+export class GamepadInput extends EventClass {
 
-	gamepads: {},
-	numGamepads: 0,
+
+	_gpButtons = {};
+	_ignoreUntilReleased = {};
+
+	gamepads = {};
+	numGamepads = 0;
+
+
+	/**
+	 *
+	 * @param {import('../renderer/Renderer').Renderer} renderer
+	 */
+	constructor( renderer ) {
+		super();
+
+		addEventListener( 'gamepadconnected', ev => {
+			this.numGamepads++;
+			this.gamepads[ev.gamepad.index] = ev.gamepad;
+			this.trigger( ev.type, ev );
+		} );
+
+		addEventListener( 'gamepaddisconnected', ev => {
+			this.numGamepads--;
+			delete this.gamepads[ev.gamepad.index];
+			this.trigger( ev.type, ev );
+		} );
+
+		renderer.addListener( eventTypeUpdate, dt => this.update() );
+	}
+
+
+	/**
+	 * Update gamepad data.
+	 */
+	_update() {
+		const gamepads = navigator.getGamepads();
+
+		for( const gamepad of gamepads ) {
+			// Chromium has 4 indices, but they may be null as value.
+			if( !gamepad ) {
+				continue;
+			}
+
+			this.gamepads[gamepad.index] = gamepad;
+
+			for( const code in this._ignoreUntilReleased ) {
+				if( code == 'axis6-' || code == 'axis6+' ) {
+					if( !gamepad.axes[6] ) {
+						delete this._ignoreUntilReleased[code];
+					}
+				}
+				else if( code == 'axis7-' || code == 'axis7+' ) {
+					if( !gamepad.axes[7] ) {
+						delete this._ignoreUntilReleased[code];
+					}
+				}
+				else if( gamepad.buttons[code] && !gamepad.buttons[code].pressed ) {
+					delete this._ignoreUntilReleased[code];
+				}
+			}
+		}
+	}
 
 
 	/**
@@ -41,7 +96,7 @@ export const GamepadInput = {
 		}
 	
 		return { x, y };
-	},
+	}
 
 
 	/**
@@ -133,7 +188,7 @@ export const GamepadInput = {
 		}
 
 		return false;
-	},
+	}
 
 
 	/**
@@ -161,69 +216,6 @@ export const GamepadInput = {
 		}
 
 		return false;
-	},
-
-
-	/**
-	 * Add an event listener.
-	 * @param {string}   type
-	 * @param {function} cb
-	 */
-	on( type, cb ) {
-		this._on[type].push( cb );
-	},
-
-
-	/**
-	 *
-	 */
-	setup() {
-		addEventListener( 'gamepadconnected', ev => {
-			this.numGamepads++;
-			this.gamepads[ev.gamepad.index] = ev.gamepad;
-
-			this._on['gp_connect'].forEach( cb => cb() );
-		} );
-
-		addEventListener( 'gamepaddisconnected', ev => {
-			this.numGamepads--;
-			delete this.gamepads[ev.gamepad.index];
-
-			this._on['gp_disconnect'].forEach( cb => cb() );
-		} );
-	},
-
-
-	/**
-	 * Update gamepad data.
-	 */
-	update() {
-		const gamepads = navigator.getGamepads();
-
-		for( const gamepad of gamepads ) {
-			// Chromium has 4 indices, but they may be null as value.
-			if( !gamepad ) {
-				continue;
-			}
-
-			this.gamepads[gamepad.index] = gamepad;
-
-			for( const code in this._ignoreUntilReleased ) {
-				if( code == 'axis6-' || code == 'axis6+' ) {
-					if( !gamepad.axes[6] ) {
-						delete this._ignoreUntilReleased[code];
-					}
-				}
-				else if( code == 'axis7-' || code == 'axis7+' ) {
-					if( !gamepad.axes[7] ) {
-						delete this._ignoreUntilReleased[code];
-					}
-				}
-				else if( gamepad.buttons[code] && !gamepad.buttons[code].pressed ) {
-					delete this._ignoreUntilReleased[code];
-				}
-			}
-		}
 	}
 
 

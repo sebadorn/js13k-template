@@ -1,18 +1,7 @@
-export const MouseInput = {
+import { EventClass } from '../renderer/EventClass.js';
 
 
-	_events: {},
-
-
-	/**
-	 * 
-	 * @param {"click"|"mousemove"} eventType Only event types that have been given to `setup()` can be registered.
-	 * @param {mouseEventCallback} cb
-	 */
-	on( eventType, cb ) {
-		this._events[eventType] = this._events[eventType] || [];
-		this._events[eventType].push( cb );
-	},
+export class MouseInput extends EventClass {
 
 
 	/**
@@ -20,7 +9,9 @@ export const MouseInput = {
 	 * @param {import('../renderer/Renderer').Renderer} renderer
 	 * @param {string[]} eventTypes Mouse events to listen for, e.g. "click", "mousemove", "mouseenter"
 	 */
-	setup( renderer, eventTypes ) {
+	constructor( renderer, eventTypes ) {
+		super();
+
 		const canvas = renderer.canvas;
 
 		/**
@@ -33,20 +24,13 @@ export const MouseInput = {
 				y: ( ev.clientY - renderer.offset.y ) / renderer.scale * devicePixelRatio,
 			};
 
-			( this._events[ev.type] || [] ).forEach( cb => cb( ev, pos ) );
+			this.trigger( ev.type, pos, ev );
 		};
 
 		eventTypes.forEach( type => {
 			canvas.addEventListener( type, ev => triggerCallbacks( ev ) );
 		} );
-	},
+	}
 
 
 };
-
-
-/**
- * @callback mouseEventCallback
- * @param {MouseEvent} event
- * @param {Vector2D} pos Mouse position scaled to inside the game.
- */

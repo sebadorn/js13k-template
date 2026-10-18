@@ -13,7 +13,7 @@ export class RippleClickEffect extends Effect {
 	 *
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
-	postDraw( ctx ) {
+	afterDraw( ctx ) {
 		const progress = this.timer.progress();
 		const r = progress * 40;
 

@@ -5,6 +5,7 @@ import { GamepadInput } from '../input/Gamepad.js';
 import { inputOnKeyUp, KeyboardInput } from '../input/Keyboard.js';
 import { MouseInput } from '../input/Mouse.js';
 import { EffectShake } from '../renderer/effects.js';
+import { eventTypeDraw, eventTypeUpdate } from '../renderer/EventClass.js';
 import { FPSCounter } from '../renderer/FPSCounter.js';
 import { Renderer } from '../renderer/Renderer.js';
 import { loadImage } from '../utils/file.js';
@@ -33,32 +34,34 @@ export class MyGame {
 				targetRatio: 16 / 9,
 				fpsCounter: new FPSCounter(),
 				pauseHandler: new Pause( this ),
-				onUpdate: dt => this.update( dt ),
-				onDraw: ctx => this.draw( ctx ),
 			}
 		);
+		this.renderer.addListener( eventTypeUpdate, dt => this.update( dt ) );
+		this.renderer.addListener( eventTypeDraw, ctx => this.draw( ctx ) );
 
 		Achievements.setup( [] );
 
-		GamepadInput.setup();
+		const gi = new GamepadInput( this.renderer );
+		gi.addListener( 'gp_connected', ev => {
+			console.debug( ev );
+		} );
 
 		KeyboardInput.setup();
 		inputOnKeyUp( 'Escape', _ev => {
 			this.renderer.togglePause();
 		} );
 
-		MouseInput.setup( this.renderer, ['click', 'mousemove'] );
-		MouseInput.on( 'click', ( _ev, pos ) => {
-			if( this.level ) {
+		const mi = new MouseInput( this.renderer, ['click', 'mousemove'] );
+		mi.addListener( 'click', pos => {
+			if( !this.renderer.isPaused && this.level ) {
 				this.level.onClick?.( pos );
 
-				const clickEffect = new RippleClickEffect( this.level, 1 );
+				const clickEffect = new RippleClickEffect();
 				clickEffect.pos = pos;
+				clickEffect.applyTo( this.level, 1 );
 
-				const shakeEffect = new EffectShake( this.level, 0.2 );
-				shakeEffect.strength = 5;
-
-				this.level.effects.push( clickEffect, shakeEffect );
+				const shakeEffect = new EffectShake();
+				shakeEffect.applyTo( this.level, 0.2 );
 			}
 		} );
 
