@@ -58,6 +58,10 @@ export class Timer {
 	 * @returns {number} Progress as [0, 1].
 	 */
 	progress() {
+		if( !this.duration ) {
+			return 1;
+		}
+
 		return Math.min( 1, 1 - this.left() / this.duration );
 	}
 
