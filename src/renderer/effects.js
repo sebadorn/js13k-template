@@ -110,9 +110,6 @@ export class EffectShake extends Effect {
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
 	beforeDraw( ctx ) {
-		this._x = randInt( -this.strength, this.strength );
-		this._y = randInt( -this.strength, this.strength );
-
 		ctx.translate( this._x, this._y );
 	}
 
@@ -123,6 +120,18 @@ export class EffectShake extends Effect {
 	 */
 	afterDraw( ctx ) {
 		ctx.translate( -this._x, -this._y );
+	}
+
+
+	/**
+	 *
+	 * @param {number} dt
+	 */
+	update( dt ) {
+		super.update( dt );
+
+		this._x = randInt( -this.strength, this.strength );
+		this._y = randInt( -this.strength, this.strength );
 	}
 
 
