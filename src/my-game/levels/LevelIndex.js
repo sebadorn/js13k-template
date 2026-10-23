@@ -3,6 +3,7 @@ import { Level } from '../../renderer/Level.js';
 import { Timer } from '../../renderer/Timer.js';
 import { circle } from '../../utils/canvas.js';
 import { isInsideRect } from '../../utils/math.js';
+import { splitTextForWidth } from '../../utils/text.js';
 import { MyObjectFigure } from '../objects.js';
 
 
@@ -29,10 +30,31 @@ export class LevelIndex extends Level {
 	draw( ctx ) {
 		this.beforeDraw( ctx );
 
+		const centerX = this.renderer.width / 2;
+		const centerY = this.renderer.height / 2;
+
 		ctx.fillStyle = '#fff';
 		ctx.textAlign = 'center';
+		ctx.textBaseline = 'top';
 		ctx.font = '500 26px monospace';
-		ctx.fillText( 'Hello, World!', this.renderer.width / 2, this.renderer.height / 2 );
+		ctx.fillText( 'Hello, World!', centerX, centerY );
+
+		ctx.textAlign = 'left';
+
+		if( !this._splitText ) {
+			this._splitText = splitTextForWidth(
+				ctx,
+				'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incid-idunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ul-lamco laboris nisi ut aliquip ex ea commodo consequat.',
+				500
+			);
+		}
+
+		this._splitText.forEach( ( line, i ) => {
+			ctx.fillText( line, centerX, centerY + 100 + i * 30 );
+		} );
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = '#6a2';
+		ctx.strokeRect( centerX, centerY + 100, 500, this._splitText.length * 30 );
 
 		ctx.fillStyle = '#f00';
 		circle( ctx, 100, 100, 100 );
