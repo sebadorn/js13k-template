@@ -179,10 +179,7 @@ export class Renderer extends EventClass {
 	 *
 	 */
 	unpause() {
-		if( this._isPaused ) {
-			this._isPaused = false;
-			this.mainLoop();
-		}
+		this._isPaused = false;
 	}
 
 
