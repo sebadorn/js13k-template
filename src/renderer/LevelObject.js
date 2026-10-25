@@ -14,7 +14,6 @@ export class LevelObject extends EventClass {
 
 	/**
 	 *
-	 * @param {import('./Level').Level} level
 	 * @param {Rectangle} rect
 	 */
 	constructor( rect ) {
