@@ -1,18 +1,16 @@
-import { pixelMode } from '../config.js';
-
-
 /**
  * Get a new canvas and its 2D context.
  * @param {number} w Width for the new canvas.
  * @param {number} h Height for the new canvas.
+ * @param {boolean} [smooth = true] Image smoothing.
  * @returns {[HTMLCanvasElement, CanvasRenderingContext2D]}
  */
-export function canvasCreate( w, h ) {
+export function canvasCreate( w, h, smooth = true ) {
 	const canvas = document.createElement( 'canvas' );
 	canvasSetSize( canvas, w, h );
 
 	const ctx = canvas.getContext( '2d', { alpha: true } );
-	ctx.imageSmoothingEnabled = !pixelMode;
+	ctx.imageSmoothingEnabled = smooth;
 
 	return [canvas, ctx];
 };
@@ -149,13 +147,14 @@ export function contextScale( ctx, coord, sx, sy ) {
  * @param {number} sh Height in the source image.
  * @param {number?} dw Destination width. Defaults to the source width.
  * @param {number?} dh Destination height. Defaults to the source height.
+ * @param {boolean} [smooth = true] Image smoothing.
  * @returns {[OffscreenCanvas, CanvasRenderingContext2D]}
  */
-export function fromImageToCanvas( img, sx, sy, sw, sh, dw, dh ) {
+export function fromImageToCanvas( img, sx, sy, sw, sh, dw, dh, smooth = true ) {
 	dw = dw || sw;
 	dh = dh || sh;
 
-	const [canvas, ctx] = offscreenCreate( dw, dh );
+	const [canvas, ctx] = offscreenCreate( dw, dh, smooth );
 	ctx.drawImage( img, sx, sy, sw, sh, 0, 0, dw, dh );
 
 	return [canvas, ctx];
@@ -166,13 +165,14 @@ export function fromImageToCanvas( img, sx, sy, sw, sh, dw, dh ) {
  * Get a new OffscreenCanvas and its 2D context.
  * @param {number} w Width for the new canvas.
  * @param {number} h Height for the new canvas.
+ * @param {boolean} [smooth = true] Image smoothing.
  * @returns {[OffscreenCanvas, CanvasRenderingContext2D]}
  */
-export function offscreenCreate( w, h ) {
+export function offscreenCreate( w, h, smooth = true ) {
 	const canvas = new OffscreenCanvas( w, h );
 
 	const ctx = canvas.getContext( '2d', { alpha: true } );
-	ctx.imageSmoothingEnabled = !pixelMode;
+	ctx.imageSmoothingEnabled = smooth;
 
 	return [canvas, ctx];
 };

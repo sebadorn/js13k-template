@@ -1,6 +1,12 @@
-import { pixelMode } from '../config.js';
 import { canvasCreate, canvasSetSize } from '../utils/canvas.js';
-import { EventClass, eventTypeDraw, eventTypeRendererPausedDraw, eventTypeRendererPausedUpdate, eventTypeRendererUpdate, eventTypeUpdate } from './EventClass.js';
+import {
+	EventClass,
+	eventTypeDraw,
+	eventTypeRendererPausedDraw,
+	eventTypeRendererPausedUpdate,
+	eventTypeRendererUpdate,
+	eventTypeUpdate,
+} from './EventClass.js';
 
 
 export class Renderer extends EventClass {
@@ -53,7 +59,7 @@ export class Renderer extends EventClass {
 	clear() {
 		this.ctx.setTransform( this.scale, 0, 0, this.scale, 0, 0 );
 		this.ctx.clearRect( 0, 0, this.width, this.height );
-		this.ctx.imageSmoothingEnabled = !pixelMode;
+		this.ctx.imageSmoothingEnabled = true;
 	}
 
 
