@@ -143,15 +143,20 @@ export function contextScale( ctx, coord, sx, sy ) {
 /**
  * Load an area from an image onto a new canvas.
  * @param {HTMLImageElement} img
- * @param {number} x
- * @param {number} y
- * @param {number} w
- * @param {number} h
+ * @param {number} sx X coordinate in the source image.
+ * @param {number} sy Y coordinate in the source image.
+ * @param {number} sw Width in the source image.
+ * @param {number} sh Height in the source image.
+ * @param {number?} dw Destination width. Defaults to the source width.
+ * @param {number?} dh Destination height. Defaults to the source height.
  * @returns {[OffscreenCanvas, CanvasRenderingContext2D]}
  */
-export function fromImageToCanvas( img, x, y, w, h ) {
-	const [canvas, ctx] = offscreenCreate( w, h );
-	ctx.drawImage( img, x, y, w, h, 0, 0, w, h );
+export function fromImageToCanvas( img, sx, sy, sw, sh, dw, dh ) {
+	dw = dw || sw;
+	dh = dh || sh;
+
+	const [canvas, ctx] = offscreenCreate( dw, dh );
+	ctx.drawImage( img, sx, sy, sw, sh, 0, 0, dw, dh );
 
 	return [canvas, ctx];
 };

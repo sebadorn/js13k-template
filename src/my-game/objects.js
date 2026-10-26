@@ -14,7 +14,7 @@ export class MyObjectFigure extends LevelObject {
 
 		[this.canvas, this.ctx] = fromImageToCanvas(
 			MemoryStorage.get( 'tiles' ),
-			0, 32, 16, 16
+			0, 32, 16, 16, this.w, this.h,
 		);
 	}
 
@@ -24,7 +24,7 @@ export class MyObjectFigure extends LevelObject {
 	 * @param {CanvasRenderingContext2D} ctx
 	 */
 	draw( ctx ) {
-		ctx.drawImage( this.canvas, this.x, this.y, this.w, this.h );
+		ctx.drawImage( this.canvas, this.x, this.y );
 	}
 
 
