@@ -63,7 +63,7 @@ export class FPSCounter {
 				this._history.splice( 0, overLimit );
 			}
 
-			this.node.textContent = `${this.average.toString().padStart( 3, '0' )} FPS / ${scale}`;
+			this.node.textContent = `${this.average.toString().padStart( 3, '0' )} FPS / ${scale * devicePixelRatio}`;
 			this._time = 0;
 		}
 	}
